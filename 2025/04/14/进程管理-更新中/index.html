@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="Oh_MyBug" />
+
+
+
+<meta name="description" content="学习进程过程中的笔记，知识点：进程控制、进程同步、管程控制、进程通信以及线程">
+<meta property="og:type" content="article">
+<meta property="og:title" content="进程管理[更新中...]">
+<meta property="og:url" content="https://oh-mybug.github.io/2020/04/14/%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86-%E6%9B%B4%E6%96%B0%E4%B8%AD/index.html">
+<meta property="og:site_name" content="Oh_MyBug">
+<meta property="og:description" content="学习进程过程中的笔记，知识点：进程控制、进程同步、管程控制、进程通信以及线程">
+<meta property="og:image" content="https://oh-mybug.github.io/2020/04/14/%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86-%E6%9B%B4%E6%96%B0%E4%B8%AD/1.png">
+<meta property="og:image" content="https://oh-mybug.github.io/2020/04/14/%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86-%E6%9B%B4%E6%96%B0%E4%B8%AD/2.png">
+<meta property="og:image" content="https://oh-mybug.github.io/2020/04/14/%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86-%E6%9B%B4%E6%96%B0%E4%B8%AD/3.png">
+<meta property="og:image" content="https://oh-mybug.github.io/2020/04/14/%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86-%E6%9B%B4%E6%96%B0%E4%B8%AD/4.png">
+<meta property="og:image" content="https://oh-mybug.github.io/2020/04/14/%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86-%E6%9B%B4%E6%96%B0%E4%B8%AD/5.png">
+<meta property="og:image" content="https://oh-mybug.github.io/2020/04/14/%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86-%E6%9B%B4%E6%96%B0%E4%B8%AD/7.png">
+<meta property="og:image" content="https://oh-mybug.github.io/2020/04/14/%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86-%E6%9B%B4%E6%96%B0%E4%B8%AD/8.png">
+<meta property="og:image" content="https://oh-mybug.github.io/2020/04/14/%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86-%E6%9B%B4%E6%96%B0%E4%B8%AD/9.png">
+<meta property="og:image" content="https://oh-mybug.github.io/2020/04/14/%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86-%E6%9B%B4%E6%96%B0%E4%B8%AD/10.png">
+<meta property="og:image" content="https://oh-mybug.github.io/2020/04/14/%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86-%E6%9B%B4%E6%96%B0%E4%B8%AD/11.png">
+<meta property="og:image" content="https://oh-mybug.github.io/2020/04/14/%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86-%E6%9B%B4%E6%96%B0%E4%B8%AD/12.png">
+<meta property="og:image" content="https://oh-mybug.github.io/2020/04/14/%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86-%E6%9B%B4%E6%96%B0%E4%B8%AD/13.png">
+<meta property="og:image" content="https://oh-mybug.github.io/2020/04/14/%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86-%E6%9B%B4%E6%96%B0%E4%B8%AD/14.png">
+<meta property="og:image" content="https://oh-mybug.github.io/2020/04/14/%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86-%E6%9B%B4%E6%96%B0%E4%B8%AD/15.png">
+<meta property="og:image" content="https://oh-mybug.github.io/2020/04/14/%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86-%E6%9B%B4%E6%96%B0%E4%B8%AD/16.png">
+<meta property="article:published_time" content="2020-04-14T04:15:14.000Z">
+<meta property="article:modified_time" content="2020-04-14T04:15:14.000Z">
+<meta property="article:author" content="Oh_MyBug">
+<meta property="article:tag" content="Operating System">
+<meta property="article:tag" content="Process">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://oh-mybug.github.io/2020/04/14/%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86-%E6%9B%B4%E6%96%B0%E4%B8%AD/1.png">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="Oh_MyBug" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/OhMyBug.ico">
+
+
+
+    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>进程管理[更新中...] | Oh_MyBug</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: true
+    }
+</script>
+
+
+    <script>
+        yiliaConfig.jquery_ui = [true, "//cdn.bootcss.com/jqueryui/1.10.4/jquery-ui.min.js", "//cdn.bootcss.com/jqueryui/1.10.4/css/jquery-ui.min.css"];
+    </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/img/Oh_MyBug.jpg" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">Oh_MyBug</a></h1>
+        </hgroup>
+
+        
+
+        
+            <form id="search-form">
+            <input type="text" id="local-search-input" name="q" placeholder="search..." class="search form-control" autocomplete="off" autocorrect="off" searchonload="false" />
+            <i class="fa fa-times" onclick="resetSearch()"></i>
+            </form>
+            <div id="local-search-result"></div>
+            <p class='no-result'>No results found <i class='fa fa-spinner fa-pulse'></i></p>
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/tags/">标签云</a></li>
+                        
+                            <li><a href="/about/">关于我</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa GitHub" href="https://github.com/Oh-MyBug" target="_blank" rel="noopener" title="GitHub"></a>
+                            
+                                <a class="fa CSDN" href="https://blog.csdn.net/Oh_MyBug" target="_blank" rel="noopener" title="CSDN"></a>
+                            
+                                <a class="fa 微信" href="/Oh_MyBug" title="微信"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Anaconda/" rel="tag">Anaconda</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Ant/" rel="tag">Ant</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Eclipse/" rel="tag">Eclipse</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/GitHub/" rel="tag">GitHub</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/" rel="tag">Hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/IDEA/" rel="tag">IDEA</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java-EE/" rel="tag">Java EE</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaWeb/" rel="tag">JavaWeb</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Maven/" rel="tag">Maven</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Operating-System/" rel="tag">Operating System</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Process/" rel="tag">Process</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Yelee/" rel="tag">Yelee</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/" rel="tag">单例模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" rel="tag">设计模式</a></li></ul>
+                    </div>
+                </section>
+                
+                
+                
+
+                
+                
+                <section class="switch-part switch-part3">
+                
+                    <div id="js-aboutme">勤勤恳恳、努力学习、一直进步、高效DeBug的Creator</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">Oh_MyBug</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/img/Oh_MyBug.jpg" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">Oh_MyBug</a></h1>
+            </hgroup>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/tags/">标签云</a></li>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa GitHub" target="_blank" href="https://github.com/Oh-MyBug" title="GitHub"></a>
+                            
+                                <a class="fa CSDN" target="_blank" href="https://blog.csdn.net/Oh_MyBug" title="CSDN"></a>
+                            
+                                <a class="fa 微信" target="_blank" href="/Oh_MyBug" title="微信"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
+</nav>
+      <div class="body-wrap"><article id="post-进程管理-更新中" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2020/04/14/%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86-%E6%9B%B4%E6%96%B0%E4%B8%AD/" class="article-date">
+      <time datetime="2020-04-14T04:15:14.000Z" itemprop="datePublished">2020-04-14</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      进程管理[更新中...]
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/Operating-System/">Operating System</a><a class="article-category-link" href="/categories/Operating-System/Process/">Process</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Operating-System/" rel="tag">Operating System</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Process/" rel="tag">Process</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <h2 id="1-进程的基本概念"><a href="#1-进程的基本概念" class="headerlink" title="1. 进程的基本概念"></a>1. 进程的基本概念</h2><h3 id="1-1-程序的顺序执行及其特征"><a href="#1-1-程序的顺序执行及其特征" class="headerlink" title="1.1. 程序的顺序执行及其特征"></a>1.1. 程序的顺序执行及其特征</h3><h4 id="1-1-1-程序的顺序执行"><a href="#1-1-1-程序的顺序执行" class="headerlink" title="1.1.1. 程序的顺序执行"></a>1.1.1. 程序的顺序执行</h4><p>&emsp;&emsp;仅当前一操作（程序段）执行完后，才能执行后继操作。例如，在进行计算时，必须先输入(Input)用户的程序和数据，然后进行计算(Calculate)，最后才能打印(Print)结果。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">S1:a : &#x3D; x+y;</span><br><span class="line">S2:b : &#x3D; a-5;</span><br><span class="line">S3:c : &#x3D; b+1;</span><br></pre></td></tr></table></figure>
+<div style="width:70%;margin:auto">
+<img src="/2020/04/14/%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86-%E6%9B%B4%E6%96%B0%E4%B8%AD/1.png" class="" title="程序的执行顺序">
+</div>
+
+<p>程序独占处理机顺序执行时<strong>特征</strong>：</p>
+<ul>
+<li><strong>顺序性</strong>：程序各程序段严格按照规定的顺序执行</li>
+<li><strong>封闭性</strong>：程序运行时机内各资源只受该程序控制而改变，执行结果不受外界因素影响</li>
+<li><strong>可再现性</strong>：只要程序执行环境和初始条件相同，程序多次执行，可获得相同结果</li>
+</ul>
+<h3 id="1-2-前趋图"><a href="#1-2-前趋图" class="headerlink" title="1.2. 前趋图"></a>1.2. 前趋图</h3><p>&emsp;&emsp;前趋图(Precedence Graph)是一个有向无循环图，记为DAG(Directed Acyclic Graph)，用于描述进程之间执行的前后关系。图中的每个结点可用于描述一个程序段或进程，乃至一条语句；结点间的有向边则用于表示两个结点之间存在的偏序(Partial Order)或前趋关系(Precedence Relation)”$\rightarrow$”</p>
+<p>&emsp;&emsp;$\rightarrow={(P_i,P_j)|P_i\ must\ complete\ before\ P_j\ may\ start}$，如果$(P_i,P_j)\in\rightarrow$，可写成$P_i\rightarrow P_j$，称$P_i$是$P_j$的<strong>直接前趋</strong>，而称$P_j$是$P_i$的<strong>直接后继</strong>。在前趋图中，把没有前趋的结点称为<strong>初始结点</strong>(Initial Node)，把没有后继的结点称为<strong>终止结点</strong>(Final Node)。</p>
+<p>&emsp;&emsp;每个结点还具有一个重量(Weight)，用于表示该结点所含有的程序量或结点的执行时间。</p>
+<p>$$I_i\rightarrow C_i \rightarrow P_i 和 S_1\rightarrow S_2 \rightarrow S_3$$</p>
+<div style="width:70%;margin:auto">
+<img src="/2020/04/14/%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86-%E6%9B%B4%E6%96%B0%E4%B8%AD/2.png" class="" title="前趋图">
+</div>
+
+<p>对于上图(a)所示的前趋图，存在下述前趋关系：</p>
+<p>$P_1 \rightarrow P_2, P_1\rightarrow P_3, P_1 \rightarrow P_4, P_2 \rightarrow P_5, P_3 \rightarrow P_5, P_4 \rightarrow P_6, P_4 \rightarrow P_7, P_5 \rightarrow P_8, P_6 \rightarrow P_8, P_7 \rightarrow P_9, P_8 \rightarrow P_9$</p>
+<p>或表示为：</p>
+<p>$P={P_1,P_2,P_3,P_4,P_5,P_6,P_7,P_8,P_9}\rightarrow ={(P_1,P_2),(P_1,P_3),(P_1,P_4),(P_2,P_5),(P_3,P_5),(P_4,P_6),(P_4,P_7),(P_5,P_8),(P_6,P_8),(P_7,P_9),(P_8,P_9)}$</p>
+<p><strong>PS</strong>: 前趋图中必须不存在循环，但在图(b)中却有着下述的前趋关系：</p>
+<p>$$S_2 \rightarrow S_3, S_3 \rightarrow S_2$$</p>
+<h3 id="1-3-程序的并发执行及其特征"><a href="#1-3-程序的并发执行及其特征" class="headerlink" title="1.3. 程序的并发执行及其特征"></a>1.3. 程序的并发执行及其特征</h3><h4 id="1-3-1-程序的并发执行"><a href="#1-3-1-程序的并发执行" class="headerlink" title="1.3.1. 程序的并发执行"></a>1.3.1. 程序的并发执行</h4><div style="width:70%;margin:auto">
+<img src="/2020/04/14/%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86-%E6%9B%B4%E6%96%B0%E4%B8%AD/3.png" class="" title="并发执行时的前趋图">
+</div>
+
+<p>在该例中存在下述前趋关系：</p>
+<p>$I_i \rightarrow C_i, I_i \rightarrow I_{i+1}, C_i \rightarrow P_i, C_i \rightarrow C_{i+1}, P_i \rightarrow P_{i+1}$</p>
+<p>而$I_{i+1}$和$C_i$及$P_{i-1}$是重迭的，亦即在$I_{i+1}$和$C_i$及$P_{i-1}$之间，可以并发执行。对于具有下述四条语句的程序段：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">S1:a: &#x3D; x+2</span><br><span class="line">S2:b: &#x3D; y+4</span><br><span class="line">S3:c: &#x3D; a+b</span><br><span class="line">S4:d: &#x3D; c+b</span><br></pre></td></tr></table></figure>
+
+<div style="width:70%;margin:auto">
+<img src="/2020/04/14/%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86-%E6%9B%B4%E6%96%B0%E4%B8%AD/4.png" class="" title="四条语句的前趋关系">
+</div>
+
+<p>程序并发执行<strong>特征</strong>:</p>
+<ul>
+<li><strong>间断性</strong>：程序在并发执行时，由于它们共享资源或为完成同一项任务而相互合作，使在并发程序之间形成了相互制约的关系。相互制约将导致并发程序具有“执行-暂停-执行”这种间断性活动规律。</li>
+<li><strong>失去封闭性</strong>：程序在并发执行时，是多个程序共享系统中的各种资源，因而这些资源的状态将由多个程序来改变，致使程序的运行已失去了封闭性。</li>
+<li><strong>不可再现性</strong>：程序在并发执行时，由于失去了封闭性，也将导致失去结果的可再现性。即程序经过多次运行，虽然其各次的环境和初始条件相同，但得到的结果却各不相同。</li>
+</ul>
+<p>进程的引入：</p>
+<ul>
+<li>为了提高资源利用率，系统采用多道程序设计，程序执行环境有顺序执行变为并发执行。</li>
+<li>由于程序在并发执行时，可能会造成执行结果的不可再现，所以用“程序”这个概念已无法描述程序的并发执行，所以必须引入新的概念–<strong>进程</strong>来描述程序的并发执行，并要对进程进行必要的管理，以保证进程在并发执行时结果可再现。</li>
+</ul>
+<h3 id="1-4-进程的特征与状态"><a href="#1-4-进程的特征与状态" class="headerlink" title="1.4. 进程的特征与状态"></a>1.4. 进程的特征与状态</h3><h4 id="1-4-1-进程的特征和定义"><a href="#1-4-1-进程的特征和定义" class="headerlink" title="1.4.1. 进程的特征和定义"></a>1.4.1. 进程的特征和定义</h4><p>进程这一术语最早由麻省理工学院著名的操作系统MULTICS中提出</p>
+<p>进程(Process)定义：“可并发执行的程序在一个数据集合上的运行过程”</p>
+<p>进程的特征：</p>
+<ul>
+<li><strong>动态性</strong>：动态性是进程的最基本特征，它是程序执行过程，它是有一定的生命期。他由创建而产生、由调度而执行、因得不到资源而暂停，并由撤销而死亡。而程序是静态的，它是存放在介质上一组有序指令的集合，无运动的含义。</li>
+<li><strong>并发性</strong>：并发性是进程的重要特征，同时也是OS的重要特征。并发性是指多个进程实体同存于内存中，能在一段时间内同时运行。而程序是不能并发执行。</li>
+<li><strong>独立性</strong>：进程是一个能独立运行的基本单位，即是一个独立获得资源和独立调度的单位，而程序不作为独立单位参加运行。</li>
+<li><strong>异步性</strong>：进程按各自独立的不可预知的速度向前推进，即进程按异步方式进行，正是这一特征，将导致程序执行的不可再现性，因此OS必须采用某种措施来限制各进程推进序列以保证各程序间正常协调运行。</li>
+<li><strong>结构特征</strong>：从结构上，进程实体由程序段、数据段和进程控制块三部分组成，UNIX中称为“进程映象”。</li>
+</ul>
+<p>较典型的进程定义由：</p>
+<ul>
+<li>进程是程序的一次执行</li>
+<li>进程是一个程序及其数据在处理机上顺序执行时所发生的活动</li>
+<li>进程是程序在一个数据集合上运行的过程，它是系统进行资源分配和调度的一个独立单位</li>
+</ul>
+<p>&emsp;&emsp;在引入了进程实体的概念后，我们可以把传统OS中的进程定义为：“进程是进程实体的运行过程，是系统进行资源分配和调度的一个独立单位”。</p>
+<h4 id="1-4-2-进程的三种基本状态"><a href="#1-4-2-进程的三种基本状态" class="headerlink" title="1.4.2. 进程的三种基本状态"></a>1.4.2. 进程的三种基本状态</h4><p><strong>运行态/执行态(Running)</strong>：当一个进程在处理机上运行时，则称该进程处于运行状态<br><strong>就绪态(Ready)</strong>：一个进程获得了除处理机外的一切所需资源，一旦得到处理机即可运行，则称此进程处于就绪状态<br><strong>阻塞态(Blocked)</strong>：又称挂起状态、等待状态，一个进程正在等待某一事件发生（例如请求I/O而等待I/O完成等）而暂时停止运行，这时即使把处理机分配给进程也无法运行，故称该进程处于阻塞状态</p>
+<div style="width:70%;margin:auto">
+<img src="/2020/04/14/%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86-%E6%9B%B4%E6%96%B0%E4%B8%AD/5.png" class="" title="进程的三种基本状态及其转换">
+</div>
+
+<p>进程状态的转换：<br>三个基本状态之间可能转换和转换原因如下：</p>
+<ul>
+<li><strong>就绪态$\rightarrow$运行态</strong>：当处理机空闲时，进程调度程序必将处理机分配给一个处于就绪态的进程，改进成便由就绪态转换为运行态</li>
+<li><strong>运行态$\rightarrow$阻塞态</strong>：处于运行态的进程在运行过程中需要等待某一事件发生后（例如因I/O请求等待I/O完成后），才能继续运行，则该进程放弃处理机，从运行态转换为阻塞态</li>
+<li><strong>阻塞态$\rightarrow$就绪态</strong>：处于阻塞态的进程, 若其等待的事件已经发生, 于是进程由阻塞态转换为就绪态</li>
+<li><strong>运行态$\rightarrow$就绪态</strong>: 处于运行状态的进程在其运行过程中,因分给它的处理机事件片已用完, 而不得不让出(被抢占)处理机,于是进程由运行态转换为就绪态</li>
+<li>阻塞态$\rightarrow$运行态 和 就绪态$\rightarrow$阻塞态这两种状态转换不可能发生</li>
+</ul>
+<p>系统中各进程状态管理:</p>
+<ul>
+<li>处于运行态进程: 如系统有一个处理机, 则在任一时刻, 最多只有一个进程处于运行态</li>
+<li>处于就绪态进程: 一般处于就绪态的进程按照一定的算法(如先来的进程排在前面, 或采用优先权高的进程排在前面)排成一个就绪队列$RL$</li>
+<li>处于阻塞态进程: 处于阻塞态的进程排在阻塞队列中。由于等待事件原因不同，阻塞队列也按事件分成几个队列$WL_i$</li>
+</ul>
+<div style="width:70%;margin:auto">
+
+</div>
+
+<ul>
+<li>就绪队列无优先级（例：FIFO）</li>
+<li>当事件n发生，对应队列移进就绪队列</li>
+</ul>
+<p>&emsp;&emsp;在一个多道程序设计的系统中，各进程状态转换会互相影响。例如系统中一个运行态的进程A发生I/O请求后要等待I/O完成，它的状态也由运行态转换为阻塞态，此时进程调度程序就会按照一定的算法，在就绪队列中选一个进程B，将处理机分给它，该B进程的状态也由就绪态转换为运行态。如一个进程C等待的事件完成，则它的状态由阻塞态转换为就绪态，它也从阻塞队列中抽出插入就绪队列中。如进程C从阻塞态转换为就绪态时，有一个进程D在CPU上运行。而系统采用抢占式调度算法，进程C的优先级又高于正在CPU上运行的进程D的优先级，则要发生抢占调度。即接下去的操作由进程调度程序将正在运行的进程D由运行态转换为就绪态，插入就绪队列。</p>
+<div style="width:70%;margin:auto">
+<img src="/2020/04/14/%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86-%E6%9B%B4%E6%96%B0%E4%B8%AD/7.png" class="" title="五种状态的进程模型">
+</div>
+
+<blockquote>
+<p><strong>系统中各进程状态的分布实例</strong></br><br><strong>例</strong>：一个只有一个处理机的系统中，OS的进程由运行、就绪、阻塞三个基本状态。假如某时刻该系统中有10个进程并发执行，再略去调度程序所占用时间情况下试问：<br>这时刻系统中处于运行态的进程数最多几个？最少几个？<br>这时刻系统中处于就绪态的进程数最多几个？最少几个？<br>这时刻系统中处于就绪态的进程数最多几个？最少几个？</br><br><strong>解</strong>：因为系统中只有一个处理机，所以某时刻处于运行态的进程数最多有一个，最少可能为0，此时其他10个进程一定全部排在阻塞队列中，再就绪队列中没有进程。而某时刻处于就绪态的进程数最多只有9个，不可能出现10个情况，因为一旦CPU有空，调度程序马上调度，当然这是在略去调度程序调度事件时考虑，处于阻塞态的进程数最少有0个。</p>
+</blockquote>
+<h4 id="1-4-3-挂起状态"><a href="#1-4-3-挂起状态" class="headerlink" title="1.4.3. 挂起状态"></a>1.4.3. 挂起状态</h4><p><strong>“挂起”、“激活”操作的引入</strong>：</p>
+<p>系统管理员有时需要暂停某个进程，以便排除系统故障或暂时减轻系统负荷，用户有时也希望暂停自己的进程以便检查自己作业的中间结果。这就希望系统提供“挂起”操作，暂停进程运行，同时也要提供“激活”的操作，恢复被挂起的进程。由于被挂起前进程的状态有三种，挂起后的进程就分为二种状态：<strong>静止就绪态</strong>和<strong>静止阻塞态</strong>（有的称<strong>挂起就绪态</strong>和<strong>挂起阻塞态</strong>）。挂起前的进程就绪态和阻塞态也成为<strong>活动就绪态</strong>和<strong>活动阻塞态</strong>。</p>
+<ul>
+<li>当进程处于运行态和活动就绪态时，执行挂起操作，进程状态转换为静止就绪态。当进程处于活动阻塞态时，执行挂起操作，进程状态转换为静止阻塞态。对被挂起的进程施加“激活”操作，则处于静止就绪的进程转换为活动就绪态，处于静止阻塞态的进程转换为活动阻塞态。被挂起的处于静止阻塞态的进程当它等待的事件发生后，他就由静止阻塞态转换为静止就绪态。具有以上五个状态和新增“挂起”、“激活”两个操作的进程状态图见下图所示：</li>
+</ul>
+<div style="width:70%;margin:auto">
+<img src="/2020/04/14/%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86-%E6%9B%B4%E6%96%B0%E4%B8%AD/8.png" class="" title="五种状态的进程状态图">
+</div>
+
+<p>进程状态的转换：</p>
+<ul>
+<li>活动就绪 $\rightarrow$ 静止就绪</li>
+<li>活动阻塞 $\rightarrow$ 静止阻塞</li>
+<li>静止就绪 $\rightarrow$ 活动就绪</li>
+<li>静止阻塞 $\rightarrow$ 活动阻塞</li>
+</ul>
+<h3 id="1-5-进程控制块"><a href="#1-5-进程控制块" class="headerlink" title="1.5. 进程控制块"></a>1.5. 进程控制块</h3><h4 id="1-5-1-进程控制块的作用"><a href="#1-5-1-进程控制块的作用" class="headerlink" title="1.5.1. 进程控制块的作用"></a>1.5.1. 进程控制块的作用</h4><p>&emsp;&emsp;进程控制块的作用是使一个在多道程序环境下不能独立运行的程序（含数据），成为一个能独立运行的基本单位，一个能与其他进程并发执行的进程。或者说，OS是根据PCB来对并发执行的进程进行控制和管理的</p>
+<h4 id="1-5-2-进程控制块中的信息"><a href="#1-5-2-进程控制块中的信息" class="headerlink" title="1.5.2. 进程控制块中的信息"></a>1.5.2. 进程控制块中的信息</h4><ul>
+<li><strong>进程标识符</strong>：进程标识符用于唯一地表示一个进程。一个进程通常由两种标识符<ul>
+<li><strong>内部标识符</strong>：在所有地操作系统中，都为每一个进程赋予一个唯一地数字标识符，它通常是一个进程地序号。设置内部标识符主要是为了方便系统使用</li>
+<li><strong>外部标识符</strong>：他由创建者提供，通常是由字母、数字组成，往往是由用户（进程）在访问该进程时使用。为了描述进程地家族关系，还应设置父进程标识及子进程标识。此外，还可以设置用户标识，以指示拥有该进程的用户</li>
+</ul>
+</li>
+<li><strong>处理机状态</strong>：处理机状态信息主要是由处理机的各种寄存器中的内容组成<ul>
+<li><strong>通用寄存器</strong>：又称为用户可视寄存器，它们是用户程序可以访问的，用于暂存信息，在大多数处理机中，由8~32个通用寄存器，在RISC结构的计算机中可超过100个</li>
+<li><strong>指令寄存器</strong>：其中存放了要访问的下一条指令的地址</li>
+<li><strong>程序状态字PSW</strong>：其中含有状态信息，如条件码、执行方式、中断屏蔽标志等；</li>
+<li><strong>用户栈指针</strong>：指每个用户进程都有一个或若干个与之相关的系统栈，用于存放过程和系统调用参数及调用地址。栈指针指向该栈的栈顶</li>
+</ul>
+</li>
+<li><strong>进程调度信息</strong>：在PCB中还存放一些与进程调度和进程对换有关的信息，包括：<ul>
+<li><strong>进程状态</strong>：指明进程的当前状态，作为进程调度和对换时的依据</li>
+<li><strong>进程优先级</strong>：用于描述进程使用处理机的优先级别的一个整数，优先级高的进程应优先获得处理机</li>
+<li><strong>进程调度所需的其他信息</strong>：它们与所采用的进程调度算法有关，比如，进程已等待CPU的时间总和、进程已执行的时间总和等</li>
+<li><strong>事件</strong>：是指进程由执行状态转变为阻塞状态所等待发生的事件，即阻塞原因</li>
+</ul>
+</li>
+<li><strong>进程控制信息</strong>：进程控制信息包括：<ul>
+<li><strong>程序和数据的地址</strong>：是指进程的程序和数据所在的内存或外存(首)地址，以便再调度到该进程执行时，能从PCB中找到其程序和数据</li>
+<li><strong>进程同步和通信机制</strong>：指实现进程同步和进程通信时必需的机制，如消息队列指针、信号量等，它们可能全部或部分地放在PCB中</li>
+<li><strong>资源清单</strong>：是一张列出了除CPU以外的、进程所需的全部资源及已经分配到该进程的资源的清单</li>
+<li><strong>链表指针</strong>：它给出了本进程(PCB)所在队列中的下一个进程的PCB的首地址</li>
+</ul>
+</li>
+</ul>
+<h4 id="1-5-3-进程控制块的组织方式"><a href="#1-5-3-进程控制块的组织方式" class="headerlink" title="1.5.3. 进程控制块的组织方式"></a>1.5.3. 进程控制块的组织方式</h4><ul>
+<li>链接方式</li>
+</ul>
+<div style="width:70%;margin:auto">
+<img src="/2020/04/14/%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86-%E6%9B%B4%E6%96%B0%E4%B8%AD/9.png" class="" title="链接方式">
+</div>
+
+<ul>
+<li>索引方式</li>
+</ul>
+<div style="width:70%;margin:auto">
+<img src="/2020/04/14/%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86-%E6%9B%B4%E6%96%B0%E4%B8%AD/10.png" class="" title="索引方式">
+</div>
+
+<h2 id="2-进程控制"><a href="#2-进程控制" class="headerlink" title="2. 进程控制"></a>2. 进程控制</h2><h3 id="2-1-进程的创建"><a href="#2-1-进程的创建" class="headerlink" title="2.1. 进程的创建"></a>2.1. 进程的创建</h3><h4 id="2-1-1-进程图-Process-Graph"><a href="#2-1-1-进程图-Process-Graph" class="headerlink" title="2.1.1. 进程图(Process Graph)"></a>2.1.1. 进程图(Process Graph)</h4><div style="width:70%;margin:auto">
+<img src="/2020/04/14/%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86-%E6%9B%B4%E6%96%B0%E4%B8%AD/11.png" class="" title="进程树">
+</div>
+
+<h4 id="2-1-2-引起创建进程的事件"><a href="#2-1-2-引起创建进程的事件" class="headerlink" title="2.1.2. 引起创建进程的事件"></a>2.1.2. 引起创建进程的事件</h4><ul>
+<li>用户登录</li>
+<li>作业调度</li>
+<li>提供服务</li>
+<li>应用请求</li>
+</ul>
+<h4 id="2-1-3-进程的创建-Creation-of-Progress"><a href="#2-1-3-进程的创建-Creation-of-Progress" class="headerlink" title="2.1.3. 进程的创建(Creation of Progress)"></a>2.1.3. 进程的创建(Creation of Progress)</h4><ul>
+<li>申请空白PCB</li>
+<li>为新进程分配资源</li>
+<li>初始化进程控制块</li>
+<li>将新进程插入就绪队列，如果新进程就绪队列能够接纳新进程，便将新进程插入就绪队列</li>
+</ul>
+<figure class="highlight pascal"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 进程创建原语</span></span><br><span class="line"><span class="function"><span class="keyword">Procedure</span> <span class="title">create</span><span class="params">(pn,pri,res,fn,args)</span>;</span></span><br><span class="line"><span class="keyword">Begin</span> getfrepcb(i);</span><br><span class="line">    <span class="keyword">if</span> i=<span class="keyword">NIL</span> <span class="keyword">then</span> return(<span class="keyword">NIL</span>);</span><br><span class="line">    i.id:=pn;i.priority:=pri;</span><br><span class="line">    i.resources:=res;</span><br><span class="line">    memallocate(datasetsize, add);</span><br><span class="line">    <span class="keyword">if</span> add=<span class="keyword">NIL</span> <span class="keyword">then</span></span><br><span class="line">    <span class="keyword">begin</span> pcbrelease(i);return(<span class="keyword">NIL</span>);<span class="keyword">end</span>;</span><br><span class="line">    i.dataadd:=add;i.datasize:=datasize;</span><br><span class="line">    datasetinit(i.dataadd,args);</span><br><span class="line">    filestate(fn,add,size);</span><br><span class="line">    <span class="keyword">if</span> add=<span class="keyword">NIL</span> <span class="keyword">then</span></span><br><span class="line">    <span class="keyword">begin</span> memallocate(size, add);</span><br><span class="line">    ......</span><br><span class="line">    <span class="keyword">read</span>(fn,size,add);<span class="keyword">end</span>;</span><br><span class="line">    i.pc:=add;i.parent:=EXE;i.state:=<span class="string">'ready'</span>;i.queue:=RQ;......</span><br><span class="line">    insert(RQ,i)</span><br><span class="line">    ......</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-2-进程的中止"><a href="#2-2-进程的中止" class="headerlink" title="2.2. 进程的中止"></a>2.2. 进程的中止</h3><h4 id="2-2-1-引起进程终止-Termination-of-Process-的事件"><a href="#2-2-1-引起进程终止-Termination-of-Process-的事件" class="headerlink" title="2.2.1. 引起进程终止(Termination of Process)的事件"></a>2.2.1. 引起进程终止(Termination of Process)的事件</h4><p><strong>正常结束</strong><br>&emsp;&emsp;在任何计算机系统中，都应有一个用于表示进程已经运行完成的指示。例如，在批处理系统中，通常在程序的最后安排一条Halt指令或终止的系统调用。当程序运行到Halt指令时，将产生一个中断，去通知OS本进程已经完成。在分时系统中，用户可利用Logs off去表示进程运行完毕，此时同样可产生一个中断，去通知OS进程已运行完毕。</p>
+<figure class="highlight pascal"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 进程停止原语</span></span><br><span class="line"><span class="function"><span class="keyword">procedure</span> <span class="title">halt</span><span class="params">(i)</span>;</span></span><br><span class="line"><span class="keyword">begin</span></span><br><span class="line">    i.state:=<span class="string">'stop'</span>;</span><br><span class="line">    send(i.parent,<span class="string">'completed'</span>);</span><br><span class="line"><span class="keyword">end</span>;</span><br></pre></td></tr></table></figure>
+
+<p><strong>异常结束</strong></p>
+<p>&emsp;&emsp;在进程运行期间，由于出现某些错误和故障而迫使进程终止。这类异常时间很多，常见的有：</p>
+<ul>
+<li><strong>越界错误</strong>：这是指程序所访问的存储区，已越出该进程的区域</li>
+<li><strong>保护错</strong>：进程试图去访问一个不允许访问的资源或文件，或者以不适当的方式进行访问，例如，进程试图去写一个只读文件；</li>
+<li><strong>非法指令</strong>：程序试图去执行一条不存在的指令。出现该错误的原因，可能是程序错误地转移到数据区，把数据当成了指令</li>
+<li><strong>特权指令错</strong>：用户进程试图去执行一条只允许OS执行的指令</li>
+<li><strong>运行超时</strong>：进程的执行时间超过了指定的最大值</li>
+<li><strong>等待超时</strong>：进程等待某事件的事件，超过了规定的最大值；</li>
+<li><strong>算术运算错</strong>：进程试图去执行一个被禁止的运算，例如，被0除</li>
+<li><strong>I/O故障</strong>：这是指在I/O过程中发生了错误等</li>
+</ul>
+<p><strong>外界干预</strong></p>
+<p>&emsp;&emsp;外界干预并非指在本进程运行中出现了异常事件，而是指进程应外界的请求而终止运行。这些干预有：</p>
+<ul>
+<li><strong>操作员或操作系统干预</strong>：由于某种原因，例如，发生了死锁，由操作员或操作系统终止该进程</li>
+<li><strong>父进程请求</strong>：由于父进程提出请求时，系统将终止该进程</li>
+<li><strong>父进程终止</strong>：当父进程终止时，OS也将他的所有子孙进程终止</li>
+</ul>
+<h4 id="2-2-2-进程的终止过程"><a href="#2-2-2-进程的终止过程" class="headerlink" title="2.2.2. 进程的终止过程"></a>2.2.2. 进程的终止过程</h4><ul>
+<li>根据被终止进程的标识符，从PCB集合中检索出该进程的PCB，从中读出该进程的状态</li>
+<li>若被终止进程正处于执行状态，应立即种种该进程的执行，并置调度标志为真，用于指示该进程被终止后应重新进行调度</li>
+<li>若该进程还有子孙进程，还应将其所有子孙进程予以终止，以防它们成为不可控进程。</li>
+<li>将被终止进程所拥有的全部资源，或者归还给其父进程，或者归还给系统</li>
+<li>将被终止进程（它的PCB）从所在队列（或链表）中移除，等待其他程序来搜集信息</li>
+</ul>
+<figure class="highlight pascal"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 进程终止原语</span></span><br><span class="line"><span class="function"><span class="keyword">Procedure</span> <span class="title">destory</span><span class="params">(i)</span>;</span></span><br><span class="line"><span class="keyword">Begin</span></span><br><span class="line">    <span class="keyword">if</span> i.state&lt;&gt;<span class="string">'stop'</span> <span class="keyword">then</span></span><br><span class="line">        halt(i);</span><br><span class="line">    <span class="keyword">while</span> i.children&gt;<span class="number">0</span> <span class="keyword">do</span></span><br><span class="line">    <span class="keyword">begin</span></span><br><span class="line">        i.children:=i.children-<span class="number">1</span>;</span><br><span class="line">        findchild(I,child);</span><br><span class="line">        destory(child);</span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line">    <span class="comment">// 归还系统资源</span></span><br><span class="line">    remove(i,queue,i);</span><br><span class="line">    pcbrelease(i);</span><br><span class="line"><span class="keyword">End</span>;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-3-进程的阻塞与唤醒"><a href="#2-3-进程的阻塞与唤醒" class="headerlink" title="2.3. 进程的阻塞与唤醒"></a>2.3. 进程的阻塞与唤醒</h3><h4 id="2-3-1-引起进程阻塞和唤醒的事件"><a href="#2-3-1-引起进程阻塞和唤醒的事件" class="headerlink" title="2.3.1. 引起进程阻塞和唤醒的事件"></a>2.3.1. 引起进程阻塞和唤醒的事件</h4><ul>
+<li>请求系统服务</li>
+<li>启动某种操作</li>
+<li>新数据尚未到达</li>
+<li>无新工作可做</li>
+</ul>
+<h4 id="2-3-2-进程阻塞过程"><a href="#2-3-2-进程阻塞过程" class="headerlink" title="2.3.2. 进程阻塞过程"></a>2.3.2. 进程阻塞过程</h4><p>&emsp;&emsp;正在执行的进程，当发现上述某事件时，由于无法继续执行，于是进程便通过调用阻塞原语block把自己阻塞。可见，进程的阻塞是进程自身的一种主动行为。进入block过程后，由于此时刻进程还处于执行状态，所以应先立即停止执行，把进程控制块中的现行状态由“执行”改为阻塞，并将PCB插入阻塞队列。如果系统中设置了因不同时间而阻塞的多个阻塞队列，则应将本进程插入到具有相同事件的阻塞（等待）队列。最后，转调度程序进行重新调度，将处理机分配给另一就绪进程，并进行切换，亦即，保留被阻塞进程的处理机状态（在PCB中），再按新进程的PCB中的处理机状态设置CPU的环境</p>
+<h4 id="2-3-3-进程唤醒过程"><a href="#2-3-3-进程唤醒过程" class="headerlink" title="2.3.3. 进程唤醒过程"></a>2.3.3. 进程唤醒过程</h4><p>&emsp;&emsp;当被阻塞进程所期待的事件出现时，如I/O完成或其所期待的数据已经到达，则由有关进程（比如，用完并释放了该I/O设备的进程）调用唤醒原语wakeup()，将等待该事件的进程唤醒。唤醒原语执行的过程是：首先把被阻塞的进程从等待改时间的阻塞队列中移除，将其PCB中的现行状态由阻塞改为就绪，然后再将该PCB插入到就绪队列中。</p>
+<h3 id="2-4-进程的挂起与激活"><a href="#2-4-进程的挂起与激活" class="headerlink" title="2.4. 进程的挂起与激活"></a>2.4. 进程的挂起与激活</h3><h4 id="2-4-1-进程的挂起"><a href="#2-4-1-进程的挂起" class="headerlink" title="2.4.1. 进程的挂起"></a>2.4.1. 进程的挂起</h4><p>&emsp;&emsp;当出现了引起进程挂起的事件时，比如，用户进程请求将自己挂起，或父进程请求将自己的某个子进程挂起，系统将利用挂起原语suspend()将指定进程或处于阻塞状态的进程挂起。挂起原语的执行过程是：首先检查被挂起进程的状态，若处于活动就绪状态，便将其改为静止就绪；对于活动阻塞状态的进程，则将之改为静止阻塞。为了方便用户或父进程考察该进程的运行情况而把该进程的PCB复制到某指定的内存区域。最后，若被挂起的进程正在执行，则转向调度程序重新调度。</p>
+<ul>
+<li><strong>终端用户的请求</strong>：当终端用户在自己的程序运行期间发现有可疑问题时，希望暂停使自己的程序静止下来。亦即，使正在执行的进程暂停执行；若此时用户进程正处于就绪状态而未执行，则该进程暂不接受调度，以便用户研究其执行情况或对程序进行修改。我们把这种静止状态称为“挂起状态”。</li>
+<li><strong>父进程的请求</strong>：有时父进程希望挂起自己的某个子进程，以便考察和修改子进程，或者协调各子进程间的活动。</li>
+<li><strong>负荷调节的需要</strong>：当实时系统中的工作负荷较重，已经可能影响到对实时任务的控制时，可由系统把一些不重要的进程挂起，以保证系统能正常执行</li>
+<li><strong>操作系统的需要</strong>：操作系统有时希望挂起某些进程，以便检查运行中的资源使用情况或进行记账</li>
+<li><strong>对换的需要</strong>：为了缓和内存紧张的情况，将内存中处于阻塞状态的进程换至外存上</li>
+</ul>
+<h4 id="2-4-2-进程的激活过程"><a href="#2-4-2-进程的激活过程" class="headerlink" title="2.4.2. 进程的激活过程"></a>2.4.2. 进程的激活过程</h4><p>&emsp;&emsp;当发生激活进程的事件时，例如，父进程或用户进程请求激活指定进程，若该进程驻留在外存而内存中已有足够空间时，则可将在外存上处于静止就绪状态的进程换入内存。这时，系统将利用激活原语active()将指定进程激活。激活原语先将进程从外存调入内存，检查该进程的现行状态，若是静止就绪，便将之改为活动就绪；若为静止阻塞便将之改为活动阻塞。加入采用的是抢占调度策略，则每当有新进程进入就绪队列时，应检查是否要进行重新调度，即由调度程序将被激活进程与当前进程进行优先级比较，如果被激活进程的优先级更低，就不必重新调度；否则，立即剥夺当前进程的运行，把处理机分配给刚被激活的进程。</p>
+<h2 id="3-进程同步"><a href="#3-进程同步" class="headerlink" title="3. 进程同步"></a>3. 进程同步</h2><h3 id="3-1-进程同步的概念"><a href="#3-1-进程同步的概念" class="headerlink" title="3.1. 进程同步的概念"></a>3.1. 进程同步的概念</h3><h4 id="3-1-1-进程间制约关系"><a href="#3-1-1-进程间制约关系" class="headerlink" title="3.1.1 进程间制约关系"></a>3.1.1 进程间制约关系</h4><p>&emsp;&emsp;在多道程序环境下系统，系统中各进程以不可预测的速度向前推进，进程的异步性会造成结果的不可再现性，为防止这种现象，异步的进程间推进收到两种限制：</p>
+<ul>
+<li><strong>资源共享关系</strong>：多进程共享资源，例如各进程争用一台打印机，这时各进程使用这台打印机时有一定的限制。每次只允许一个进程使用一段时间打印机，等该进程使用完毕后再将打印机分配给其他进程。这种使用原则称为 <strong>互斥使用</strong>。<br>进程之间竞争资源面临三个控制问题：<ul>
+<li><strong>互斥</strong>(mutual exclusion)指多个进程不能同时使用同一个资源</li>
+<li><strong>死锁</strong>(deadlock)指多个进程互不相让，都得不到足够的资源</li>
+<li><strong>饥饿</strong>(starvation)指一个进程一直得不到资源（其他进程可能轮流占用资源</li>
+</ul>
+</li>
+<li><strong>相互合作关系</strong>：在某些进程之间还存在合作关系，例如一个程序的输入、计算、打印三个程序段作为三个进程并发执行，由于这三个进程间存在着相互合作的关系，即先输入再计算、最后再打印的关系，所以这三个进程在并发执行时推进序列受到限制，要保证其合作关系正确，进程间这种关系称为 <strong>同步关系</strong>。</li>
+</ul>
+<h4 id="3-1-2-临界资源"><a href="#3-1-2-临界资源" class="headerlink" title="3.1.2. 临界资源"></a>3.1.2. 临界资源</h4><p>&emsp;&emsp;像打印机这类资源一次只允许一个进程使用的资源称为临界资源。属于临界资源有硬件打印机、磁盘机等，软件在消息缓冲队列、变量、数组、缓冲区等。当然还有一类像磁盘等资源，它允许进程间共享，即可交替使用，所以他称为 <strong>共享资源</strong>，而临界资源又称 <strong>独享资源</strong></p>
+<p>&emsp;&emsp;生产者-消费者(producer-consumer)问题是一个著名的进程同步问题。它描述的是：有一群生产者进程在生产产品，并将这些产品提供给消费者进程去消费。为使生产者进程与消费者进程能并发执行，在两者之间设置了一个具有n个缓冲区的缓冲池，生产者进程将它所生产的产品放入一个缓冲区中；消费者进程可从一个缓冲区中取走产品并消费。尽管所有的生产者进程和消费者进程都是以异步方式运行的，但他们之间必须保持同步，即不允许消费者进程到一个空缓冲区去去产品；也不允许生产者进程向一个已装满产品且尚未被取走的缓冲区中投放产品。</p>
+<h4 id="3-1-3-临界区-critical-sections"><a href="#3-1-3-临界区-critical-sections" class="headerlink" title="3.1.3. 临界区(critical sections)"></a>3.1.3. 临界区(critical sections)</h4><p>&emsp;&emsp;多个进程共享临界资源时必须互斥使用，例如在两个进程A和B他们的程序如下：</p>
+<figure class="highlight pascal"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">A: <span class="keyword">begin</span></span><br><span class="line">        Input data <span class="number">1</span> from I/O <span class="number">1</span> ;</span><br><span class="line">        Computer......;</span><br><span class="line">        Print results <span class="number">1</span> by printer ;    <span class="comment">// A临界区</span></span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line">B: <span class="keyword">begin</span></span><br><span class="line">        Input data <span class="number">1</span> from I/O <span class="number">2</span> ;</span><br><span class="line">        Computer......;</span><br><span class="line">        Print results <span class="number">2</span> by printer ;    <span class="comment">// B临界区</span></span><br><span class="line">    <span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;A和B两个进程都需要使用打印机，它们必须互斥使用。如果为了保证结果的正确性限制A、B二进程推进序列，规定进程A执行好再执行进程B，或进程B执行好再执行进程A，这样的限制就显得过死，因为它已不能保证进程A、B并发执行，所以必须把限制减少到最少，以尽可能支持并发执行。为此把各进程代码分解，把访问临界资源的那段代码（称为临界区）与其他段代码分割开来，只对各种进程进入自己的临界区加以限制，即各进程互斥地进入自己的临界区。在上述A、B两程序中我们分别把A和B的使用打印机的二段程序<code>print result 1 by printer</code>和<code>print result 2 by printer</code> 称为A和B进程使用打印机的临界区A和临界区B，进程A和B必须互斥地分别进入各自的临界区A和B。</p>
+<p><strong>临界资源</strong>：一次只允许一个进程使用的资源<br><strong>临界区</strong>：一个程序片段的集合，这些程序片段分散在不同的进程中，对某个共享的数据结构进行操作。<br><strong>互斥</strong>：不允许两个以上的共享某个资源的并发进程同时进入临界区</p>
+<h4 id="3-1-4-进程同步机制"><a href="#3-1-4-进程同步机制" class="headerlink" title="3.1.4. 进程同步机制"></a>3.1.4. 进程同步机制</h4><p>进程在并发执行时为了保证结果的可再现性，各进程执行序列必须加以限制以保证互斥地使用临界资源，相互合作完成任务。</p>
+<p>多个相关进程在执行次序上的协调称为<strong>进程同步</strong>。用于保证多个进程在执行次序上的协调关系的相应机制称为 <strong>进程同步机制</strong></p>
+<p>所有的进程同步机制应遵循下述四条准则：</p>
+<ul>
+<li><strong>空闲让进</strong>：当无进程进入临界区时，相应的临界资源处于空闲状态，因而允许一个请求进入临界区的进程立即进入自己的临界区。</li>
+<li><strong>忙则等待</strong>：当已有进程进入自己的临界区时，即相应的临界资源正被访问， 因而其他试图进入临界区的进程必须等待，以保证进程互斥地访问临界资源</li>
+<li><strong>有限等待</strong>：对要求访问临界资源的进程，应保证进程能在有限时间进入临界区，以免陷入“饥饿”状态</li>
+<li><strong>让权等待</strong>：当进程不能进入自己的临界区时，应立即释放处理机，以免进程陷入忙等</li>
+</ul>
+<div style="width:70%;margin:auto">
+<img src="/2020/04/14/%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86-%E6%9B%B4%E6%96%B0%E4%B8%AD/12.png" class="" title="Mutual exclusion using critical regions">
+</div>
+
+<p>一个由临界区和剩余区1以及剩余区2程序段组成的进程采用进程同步机制后的描述如下：</p>
+<figure class="highlight pascal"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">begin</span> remainder section <span class="number">1</span> ;  <span class="comment">// 剩余区1</span></span><br><span class="line">    <span class="comment">// 进入区</span></span><br><span class="line">    critical section ;      <span class="comment">// 临界区</span></span><br><span class="line">    <span class="comment">// 退出区</span></span><br><span class="line">    remainder section <span class="number">2</span> ;   <span class="comment">// 剩余区2</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+
+<p>进程同步机制在临界区前加上进入去，她负责对欲访问的临界资源状态进行检查，以决定是允许该进程进入临界区还是等待。同时在临界区后加上退出区，它负责释放临界资源以便其他等待该临界资源的进程使用</p>
+<p>实现进程互斥和同步的信号量机制有软件方法、硬件指令方法、信号量机制和管程等</p>
+<h3 id="3-2-信号量机制"><a href="#3-2-信号量机制" class="headerlink" title="3.2. 信号量机制"></a>3.2. 信号量机制</h3><h4 id="3-2-1-整型信号量"><a href="#3-2-1-整型信号量" class="headerlink" title="3.2.1. 整型信号量"></a>3.2.1. 整型信号量</h4><p>&emsp;&emsp;最初由Dijkstra把整型信号量定义为一个整型量，除初始化外，仅能通过两个标准的原子操作(Atomic Operation)wait(S)和Signal(S)来访问。这两个操作一直被分别称为P、V操作。wait和signal操作可描述为：</p>
+<figure class="highlight pascal"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">wait(S): <span class="keyword">while</span> S &lt;= <span class="number">0</span> <span class="keyword">do</span> no-op</span><br><span class="line">            S: = S-<span class="number">1</span></span><br><span class="line">signal(S):  S: = S+<span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="3-2-2-记录型信号量"><a href="#3-2-2-记录型信号量" class="headerlink" title="3.2.2. 记录型信号量"></a>3.2.2. 记录型信号量</h4><p>&emsp;&emsp;在整型信号量机制中的wait操作，只要是信号量S$\ge$0，就会不断地测试。因此，该机制并未遵循“让权等待”的准则，而是使进程处于“忙等”的状态。记录型信号量机制，则是一种不存在“忙等”现象的进程同步机制。但在采取了“让权等待”的策略后，又会出现多个进程等待访问同一临界资源的情况。为此，在信号量机制中，除了需要一个用于代表资源数目的整型变量value外，还应增加一个进程链表L，用于链接上述的所有等待进程。记录型信号量是由于它采用了记录型的数据结构而得名的。它所包含的上述两个数据项可描述为：</p>
+<figure class="highlight pascal"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> semaphore = <span class="keyword">record</span></span><br><span class="line">    value:integer;</span><br><span class="line">    L:list <span class="keyword">of</span> process;</span><br><span class="line">    <span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+
+<p>相应的，wait(S)和signal(S)操作可描述为：</p>
+<figure class="highlight pascal"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">procedure</span> <span class="title">wait</span><span class="params">(S)</span></span></span><br><span class="line"><span class="function">    <span class="title">var</span> <span class="title">S</span>:</span>semaphore;</span><br><span class="line">    <span class="keyword">begin</span></span><br><span class="line">        S.value:= S.value-<span class="number">1</span></span><br><span class="line">        <span class="keyword">if</span> S.value&lt;<span class="number">0</span> <span class="keyword">then</span> block(S,L)</span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line"><span class="function"><span class="keyword">procedure</span> <span class="title">signal</span><span class="params">(S)</span></span></span><br><span class="line"><span class="function">    <span class="title">var</span> <span class="title">S</span>:</span>semaphore;</span><br><span class="line">    <span class="keyword">begin</span></span><br><span class="line">        S.value:= S.value+<span class="number">1</span></span><br><span class="line">        <span class="keyword">if</span> S.value&lt;=<span class="number">0</span> <span class="keyword">then</span> wakeup(S,L)</span><br><span class="line">    <span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+
+<h5 id="信号量的类型"><a href="#信号量的类型" class="headerlink" title="信号量的类型"></a>信号量的类型</h5><p>信号量按联系进程的关系分成两类：</p>
+<ul>
+<li><strong>公用信号量</strong>（<strong>互斥信号量</strong>）：它为一组需互斥共享临界资源的并发进程而设置，它代表永久性的共享的临界资源，每个进程均可对它施加P、V操作，即都可申请和释放该临界资源，其初始值置为1。</li>
+<li><strong>专用信号量</strong>（<strong>同步信号量</strong>）：它为一组需同步协作完成任务的并发进程而设置，它代表消耗性的专用资源，只有拥有该资源的进程才能对它施加P操作（即可申请资源），而由其合作进程对它施加V操作（即释放资源）。</li>
+</ul>
+<h5 id="信号量S取值意义"><a href="#信号量S取值意义" class="headerlink" title="信号量S取值意义"></a>信号量S取值意义</h5><blockquote>
+<p>S.value  &gt;  0 ： 表示可供使用资源数<br>&emsp;&emsp; &emsp; = 0 : 表示是资源已被占用<br>&emsp;&emsp; &emsp; &lt; 0 (= -n) : 表示资源已被占用，还有n个进程因等待资源而阻塞</p>
+</blockquote>
+<div style="width:70%;margin:auto">
+<img src="/2020/04/14/%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86-%E6%9B%B4%E6%96%B0%E4%B8%AD/13.png" class="" title="使用信号量保护共享数据">
+</div>
+
+<h4 id="3-2-3-AND型信号量"><a href="#3-2-3-AND型信号量" class="headerlink" title="3.2.3. AND型信号量"></a>3.2.3. AND型信号量</h4><p>在两个进程中都要包含两个对Dmutex和Emutex的操作，即</p>
+<figure class="highlight pascal"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">process A:              process B:</span><br><span class="line">wait(Dmutex)            wait(Emutex)</span><br><span class="line">wait(Emutex)            wait(Dmutex)</span><br></pre></td></tr></table></figure>
+<p>若进程A和B按下述次序交替执行wait操作：</p>
+<figure class="highlight pascal"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">process A: wait(Dmutex);    <span class="comment">// 于是Dmutex = 0</span></span><br><span class="line">process B: wait(Emutex);    <span class="comment">// 于是Emutex = 0</span></span><br><span class="line">process A: wait(Emutex);    <span class="comment">// 于是Emutex = -1 A阻塞</span></span><br><span class="line">process B: wait(Dmutex);    <span class="comment">// 于是Dmutex = -1 B阻塞</span></span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;AND同步机制的基本思想是：将进程在整个运行过程中需要的所有资源，一次性全部地分配给进程，待进程使用完后再一起释放。只要尚有一个资源未能分配给进程，其他所有可能为之分配的资源，也不分配给他。亦即，对若干个临界资源的分配，采取原子操作方式：要么全部分配到进程，要么一个也不分配。由死锁理论可知，这样就可避免上述死锁情况的发生。为此，在wait操作中，增加了一个“AND”条件，故称为AND同步，或称为同时wait操作，即Swait（Simultaneous wait）定义如下：</p>
+<figure class="highlight pascal"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">Swait(S_1, S_2, ..., S_n)</span><br><span class="line">    <span class="keyword">if</span> S_i&gt;=<span class="number">1</span> <span class="keyword">and</span> ... <span class="keyword">and</span> S_n&gt;=<span class="number">1</span> <span class="keyword">then</span></span><br><span class="line">        <span class="keyword">for</span> i:=<span class="number">1</span> <span class="keyword">to</span> n <span class="keyword">do</span></span><br><span class="line">        S_i:=S_i-<span class="number">1</span>;</span><br><span class="line">        endfor</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    place the process <span class="keyword">in</span> the waiting queue associated <span class="keyword">with</span> the first S_i found <span class="keyword">with</span> S_i&lt;<span class="number">1</span>, <span class="keyword">and</span> <span class="keyword">set</span> <span class="keyword">program</span> count <span class="keyword">of</span> this process <span class="keyword">to</span> the beginning <span class="keyword">of</span> Swait operation</span><br><span class="line">    endif</span><br><span class="line">Ssignal(S_1,S_2,...,S_n)</span><br><span class="line">    <span class="keyword">for</span> i:=<span class="number">1</span> <span class="keyword">to</span> n <span class="keyword">do</span></span><br><span class="line">    S_i=S_i+<span class="number">1</span>;</span><br><span class="line">    Remove all the process waiting <span class="keyword">in</span> the queue associated <span class="keyword">with</span> S_i into the ready queue.</span><br><span class="line">    endfor;</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-2-4-信号量集"><a href="#3-2-4-信号量集" class="headerlink" title="3.2.4. 信号量集"></a>3.2.4. 信号量集</h4><figure class="highlight pascal"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">Swait(S_1,t_1,d_1,...,S_n,t_n,d_n)</span><br><span class="line">    <span class="keyword">if</span> S_i&gt;=t_i <span class="keyword">and</span> ... <span class="keyword">and</span> S_n&gt;=t_n <span class="keyword">then</span></span><br><span class="line">        <span class="keyword">for</span> i:=<span class="number">1</span> <span class="keyword">to</span> n <span class="keyword">do</span></span><br><span class="line">            S_i:=S_i-d_i</span><br><span class="line">        endfor</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    Place the executing process <span class="keyword">in</span> the waiting queue <span class="keyword">of</span> the first S_i <span class="keyword">with</span> S_i&lt;t_i <span class="keyword">and</span> <span class="keyword">set</span> its <span class="keyword">program</span> counter <span class="keyword">to</span> the beginning <span class="keyword">of</span> the Swait Operation.</span><br><span class="line">    endif</span><br><span class="line"></span><br><span class="line">signal(S_1,d_1,...,S_n,d_n)</span><br><span class="line">    <span class="keyword">for</span> i:=<span class="number">1</span> <span class="keyword">to</span> n <span class="keyword">do</span></span><br><span class="line">        S_i:=S_i+d_i;</span><br><span class="line">    Remove all the process waiting <span class="keyword">in</span> the queue associated <span class="keyword">with</span> S_i into the ready queue</span><br><span class="line">    endfor;</span><br></pre></td></tr></table></figure>
+
+<p>一般“信号集”的几种特殊情况：<br>（1）<strong>Swait(S,d,d)</strong>：此时在信号量集中只有一个信号量S，但允许它每次申请d个资源，当现有资源数少于d时，不予分配<br>（2）<strong>Swait(S,1,1)</strong>：此时的信号量集已蜕化位一般的记录型信号量（S&gt;1时）或互斥信号量（S=1时）<br>（3）<strong>Swait(S,1,0)</strong>：这是一个很特殊且很有用的信号量操作。当S$\ge$1时，允许多个进程进入某特定区；当S变为0后，将阻止任何进程进入特定区。换言之，它相当于一个可控开关。</p>
+<h3 id="3-3-信号量的应用"><a href="#3-3-信号量的应用" class="headerlink" title="3.3. 信号量的应用"></a>3.3. 信号量的应用</h3><h4 id="3-3-1-利用信号量实现进程互斥"><a href="#3-3-1-利用信号量实现进程互斥" class="headerlink" title="3.3.1. 利用信号量实现进程互斥"></a>3.3.1. 利用信号量实现进程互斥</h4><p>利用信号量实现进程互斥的进程可描述如下：<br>① 成对出现 ② 同一进程</p>
+<figure class="highlight pascal"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">Var</span> mutex:semaphore:=<span class="number">1</span>      <span class="comment">// 初始信号量</span></span><br><span class="line">    <span class="keyword">begin</span></span><br><span class="line">    parbegin</span><br><span class="line">    process <span class="number">1</span>:<span class="keyword">begin</span></span><br><span class="line">        <span class="keyword">repeat</span></span><br><span class="line">        wait(mutex);        <span class="comment">// 申请资源</span></span><br><span class="line">        critical section    <span class="comment">// 临界区</span></span><br><span class="line">        signal(mutex);      <span class="comment">// 释放资源</span></span><br><span class="line">        remainder seetion</span><br><span class="line">        <span class="keyword">until</span> false;</span><br><span class="line">        <span class="keyword">end</span></span><br><span class="line">    process <span class="number">2</span>:<span class="keyword">begin</span></span><br><span class="line">        <span class="keyword">repeat</span></span><br><span class="line">        wait(mutex)</span><br><span class="line">        critical section    <span class="comment">// 临界区</span></span><br><span class="line">        signal(mutex)</span><br><span class="line">        remainder section</span><br><span class="line">        <span class="keyword">until</span> false;</span><br><span class="line">        <span class="keyword">end</span></span><br><span class="line">    parend</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-3-2-利用信号量实现前趋关系"><a href="#3-3-2-利用信号量实现前趋关系" class="headerlink" title="3.3.2. 利用信号量实现前趋关系"></a>3.3.2. 利用信号量实现前趋关系</h4><div style="width:70%;margin:auto">
+<img src="/2020/04/14/%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86-%E6%9B%B4%E6%96%B0%E4%B8%AD/14.png" class="" title="前趋图举例">
+</div>
+
+<figure class="highlight pascal"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">Var</span> a,b,c,d,f,g:semaphore:=<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">begin</span></span><br><span class="line">        parbegin</span><br><span class="line">        <span class="keyword">begin</span> S_1;signal(a);signal(b);<span class="keyword">end</span>;</span><br><span class="line">        <span class="keyword">begin</span> wait(a);S_2;signal(c);signal(d);<span class="keyword">end</span>;</span><br><span class="line">        <span class="keyword">begin</span> wait(b);S_3;signal(e);<span class="keyword">end</span>;</span><br><span class="line">        <span class="keyword">begin</span> wait(c);S_4;signal(f);<span class="keyword">end</span>;</span><br><span class="line">        <span class="keyword">begin</span> wait(d);S_5;signal(g);<span class="keyword">end</span>;</span><br><span class="line">        <span class="keyword">begin</span> wait(e);wait(f);S_6;<span class="keyword">end</span>;</span><br><span class="line">        parend</span><br><span class="line">    <span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="3-3-3-利用信号量实现进程同步"><a href="#3-3-3-利用信号量实现进程同步" class="headerlink" title="3.3.3. 利用信号量实现进程同步"></a>3.3.3. 利用信号量实现进程同步</h4><p>利用信号量能解决进程间的同步问题，这里以下图所示的计算进程C和打印进程P通过缓冲区Buffer传送数据的同步问题为例说明。</p>
+<div style="width:70%;margin:auto">
+<img src="/2020/04/14/%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86-%E6%9B%B4%E6%96%B0%E4%B8%AD/15.png" class="" title="前趋图举例">
+</div>
+
+<p>C和P两进程基本算法如下：</p>
+<figure class="highlight pascal"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">C:  <span class="keyword">begin</span></span><br><span class="line">    <span class="keyword">repeat</span></span><br><span class="line">    Compute next number;</span><br><span class="line">    add <span class="keyword">to</span> Buffer;</span><br><span class="line">    <span class="keyword">until</span> false</span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line">P:  <span class="keyword">begin</span></span><br><span class="line">    <span class="keyword">repeat</span></span><br><span class="line">    remove from Buffer;</span><br><span class="line">    print last number;</span><br><span class="line">    <span class="keyword">until</span> false</span><br><span class="line">    <span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>C和P进程并发执行，必须在执行序列上遵循以下规则，才能避免错误。</p>
+<ul>
+<li>只有当C进程把数据送入Buffer后，P进程才能从Buffer中取出数据来打印，否则P进程只能等待。</li>
+<li>只有当P进程从Buffer中取走数据后，C进程才能将新计算的数据再存入Buffer，否则C进程也只能等待。</li>
+</ul>
+<p>为了实现进程同步，需采用同步信号量。为了满足第一条同步规则：只有当C进程把数据送入Buffer后，P进程才能从Buffer中取出数据来打印。设置一个同步信号量full，它代表的消耗性专用资源是缓冲器装满数据，这个资源只是后面动作（Remove from buffer）的进程（P进程）所拥有，P进程在动作前可以申请该资源，对它施加P操作，如条件满足P进程可从Buffer中取数，它的初值为0。而前面动作的进程（P进程的合作进程C）在动作（Add to Buffer）完成后对full信号量施加V操作，即当C进程将数据存入Buffer后，即可释放该资源供P进程再使用。实现C和P两进程第一条同步规则的类PASCAL程序：</p>
+<p>考虑第一个同步关系-C加入后P再取</p>
+<figure class="highlight pascal"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span>:full:semaphore:=<span class="number">0</span>;</span><br><span class="line"><span class="keyword">begin</span></span><br><span class="line">    parbegin</span><br><span class="line">    C:  <span class="keyword">begin</span></span><br><span class="line">        <span class="keyword">repeat</span></span><br><span class="line">            Computer next number;</span><br><span class="line">            Add <span class="keyword">to</span> buffer;</span><br><span class="line">            V(fulll);</span><br><span class="line">            <span class="keyword">until</span> false</span><br><span class="line">        <span class="keyword">end</span></span><br><span class="line">    P:  <span class="keyword">begin</span></span><br><span class="line">        <span class="keyword">repeat</span></span><br><span class="line">            P(full);</span><br><span class="line">            remove from Buffer;</span><br><span class="line">            Print last number;</span><br><span class="line">            <span class="keyword">until</span> false</span><br><span class="line">        <span class="keyword">end</span></span><br><span class="line">    parend</span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+
+<p>为了满足第二条同步规则：只有当P进程从Buffer中取走数据后，C进程才能将新计算的数据再存入Buffer。设置另一个同步信号量empty，它代表的消耗性的专用资源是缓冲器为空，这个资源只是后面动作（Add to buffer）的进程（C进程）所拥有，C进程在动作前可以申请该资源，对它施加P操作，如条件满足进程C可以折你去哪个该资源，它的初值为1.而前面动作（Remove from buffer）的进程（C进程的合作进程P）在动作完成后对empty信号量施加V操作，即当P进程从Buffer中取走数据后，即可释放该资源供C进程再使用。</p>
+<p>实现C和P进程第二条同步规则的类PASCAL程序：<br>考虑第二个同步关系——P取走后C再加入</p>
+<figure class="highlight pascal"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span>:full:semaphore:=<span class="number">0</span>;</span><br><span class="line"><span class="keyword">begin</span></span><br><span class="line">    parbegin</span><br><span class="line">    C:  <span class="keyword">begin</span></span><br><span class="line">        <span class="keyword">repeat</span></span><br><span class="line">            Computer next number;</span><br><span class="line">            P(empty);</span><br><span class="line">            Add <span class="keyword">to</span> buffer;</span><br><span class="line">            <span class="keyword">until</span> false</span><br><span class="line">        <span class="keyword">end</span></span><br><span class="line">    P:  <span class="keyword">begin</span></span><br><span class="line">        <span class="keyword">repeat</span></span><br><span class="line">            remove from Buffer;</span><br><span class="line">            V(empty);</span><br><span class="line">            Print last number;</span><br><span class="line">            <span class="keyword">until</span> false</span><br><span class="line">        <span class="keyword">end</span></span><br><span class="line">    parend</span><br><span class="line">en</span><br></pre></td></tr></table></figure>
+
+<p>当同时考虑两个同步关系时，类PASCAL程序：</p>
+<figure class="highlight pascal"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span>:full:semaphore:=<span class="number">0</span>;</span><br><span class="line"><span class="keyword">begin</span></span><br><span class="line">    parbegin</span><br><span class="line">    C:  <span class="keyword">begin</span></span><br><span class="line">        <span class="keyword">repeat</span></span><br><span class="line">            Computer next number;</span><br><span class="line">            P(empty);</span><br><span class="line">            Add <span class="keyword">to</span> buffer;</span><br><span class="line">            V(full);</span><br><span class="line">            <span class="keyword">until</span> false</span><br><span class="line">        <span class="keyword">end</span></span><br><span class="line">    P:  <span class="keyword">begin</span></span><br><span class="line">        <span class="keyword">repeat</span></span><br><span class="line">            P(full);</span><br><span class="line">            remove from Buffer;</span><br><span class="line">            V(empty);</span><br><span class="line">            Print last number;</span><br><span class="line">            <span class="keyword">until</span> false</span><br><span class="line">        <span class="keyword">end</span></span><br><span class="line">    parend</span><br><span class="line">en</span><br></pre></td></tr></table></figure>
+
+<p><strong>同步物理意义</strong>：同步可以理解为，先做动作的进程C在动作完成后对同步信号量施加V操作，代表发送消息；后做动作的进程P在动作前对同步信号量施加P操作，代表测试消息是否到达。</p>
+<blockquote>
+<p>例：有三个共行进程P、Q和R以及一对供存数据的缓冲BufI和BufO，P进程把数据输入BufI，R进程输出BufO中的数据。Q把BufI中的数据变换后送入BufO，在上述假定之下，使三个进程实现最大并行性。试在下述类PASCAL程序中虚线位置分别填上信号量、信号初值和P、V操作实现三个进程正确的并发执行</p>
+</blockquote>
+<div style="width:70%;margin:auto">
+<img src="/2020/04/14/%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86-%E6%9B%B4%E6%96%B0%E4%B8%AD/16.png" class="">
+</div>
+
+<figure class="highlight pascal"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">Program</span> ito;</span><br><span class="line">    <span class="keyword">var</span> BufI,BufO:buffer;</span><br><span class="line">    (信号量)_ _ _ _ _ _:SEMAPHORE:=(信号量初值)_ _ _ _ _ _;</span><br><span class="line">    <span class="keyword">begin</span></span><br><span class="line">    parbegin</span><br><span class="line">    P:<span class="keyword">begin</span></span><br><span class="line">        <span class="keyword">repeat</span></span><br><span class="line">            input from IO;</span><br><span class="line">            _ _ _ _ _ _</span><br><span class="line">            Add <span class="keyword">to</span> BufI;</span><br><span class="line">            _ _ _ _ _ _</span><br><span class="line">        <span class="keyword">until</span> false</span><br><span class="line">    <span class="keyword">end</span>;</span><br><span class="line">    Q:<span class="keyword">begin</span></span><br><span class="line">        <span class="keyword">repeat</span></span><br><span class="line">            _ _ _ _ _ _</span><br><span class="line">            Remove from BufI;</span><br><span class="line">            _ _ _ _ _ _</span><br><span class="line">            transform;</span><br><span class="line">            _ _ _ _ _ _</span><br><span class="line">            Add <span class="keyword">to</span> BufO;</span><br><span class="line">            _ _ _ _ _ _</span><br><span class="line">        <span class="keyword">until</span> false</span><br><span class="line">    <span class="keyword">end</span>;</span><br><span class="line">    R:<span class="keyword">begin</span></span><br><span class="line">        <span class="keyword">repeat</span></span><br><span class="line">            _ _ _ _ _ _</span><br><span class="line">            Remove from BufO;</span><br><span class="line">            _ _ _ _ _ _</span><br><span class="line">            Output ...;</span><br><span class="line">        <span class="keyword">until</span> false</span><br><span class="line">    <span class="keyword">end</span>;</span><br><span class="line">    parend</span><br><span class="line">    <span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>答案:<br>emptyI,fullI,emptyO,fullO<br>1,0,1,0<br>wait(emptyI)<br>signal(fullI)<br>wait(fullI)<br>signal(emptyI)<br>wait(emptyO)<br>signal(fullO)<br>wait(fullO)<br>signal(emptyO)</p>
+</blockquote>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2020/04/14/%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86-%E6%9B%B4%E6%96%B0%E4%B8%AD/">进程管理[更新中...]</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">Oh_MyBug</a></p>
+        <p><span>发布时间:</span>2020-04-14, 12:15:14</p>
+        <p><span>最后更新:</span>2020-04-14, 12:15:14</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2020/04/14/%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86-%E6%9B%B4%E6%96%B0%E4%B8%AD/" title="进程管理[更新中...]">https://oh-mybug.github.io/2020/04/14/%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86-%E6%9B%B4%E6%96%B0%E4%B8%AD/</a>
+            <span class="copy-path" data-clipboard-text="原文: https://oh-mybug.github.io/2020/04/14/%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86-%E6%9B%B4%E6%96%B0%E4%B8%AD/　　作者: Oh_MyBug" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license noopener" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2020/04/15/%E8%A7%A3%E5%86%B3GitHub%E7%BD%91%E9%A1%B5%E4%B8%8A%E5%9B%BE%E7%89%87%E6%98%BE%E7%A4%BA%E5%A4%B1%E8%B4%A5%E9%97%AE%E9%A2%98/">
+                    解决GitHub网页上图片显示失败问题
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2020/04/11/Hexo%E4%B8%BB%E9%A2%98%E2%80%94%E2%80%94Yelee%E7%9A%84%E4%BD%BF%E7%94%A8-%E6%9B%B4%E6%96%B0%E4%B8%AD/">
+                    Hexo主题——Yelee的使用[更新中...]
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-进程的基本概念"><span class="toc-text">1. 进程的基本概念</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-程序的顺序执行及其特征"><span class="toc-text">1.1. 程序的顺序执行及其特征</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-1-1-程序的顺序执行"><span class="toc-text">1.1.1. 程序的顺序执行</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-前趋图"><span class="toc-text">1.2. 前趋图</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-3-程序的并发执行及其特征"><span class="toc-text">1.3. 程序的并发执行及其特征</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-3-1-程序的并发执行"><span class="toc-text">1.3.1. 程序的并发执行</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-4-进程的特征与状态"><span class="toc-text">1.4. 进程的特征与状态</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-4-1-进程的特征和定义"><span class="toc-text">1.4.1. 进程的特征和定义</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-4-2-进程的三种基本状态"><span class="toc-text">1.4.2. 进程的三种基本状态</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-4-3-挂起状态"><span class="toc-text">1.4.3. 挂起状态</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-5-进程控制块"><span class="toc-text">1.5. 进程控制块</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-5-1-进程控制块的作用"><span class="toc-text">1.5.1. 进程控制块的作用</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-5-2-进程控制块中的信息"><span class="toc-text">1.5.2. 进程控制块中的信息</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-5-3-进程控制块的组织方式"><span class="toc-text">1.5.3. 进程控制块的组织方式</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-进程控制"><span class="toc-text">2. 进程控制</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-进程的创建"><span class="toc-text">2.1. 进程的创建</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#2-1-1-进程图-Process-Graph"><span class="toc-text">2.1.1. 进程图(Process Graph)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-1-2-引起创建进程的事件"><span class="toc-text">2.1.2. 引起创建进程的事件</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-1-3-进程的创建-Creation-of-Progress"><span class="toc-text">2.1.3. 进程的创建(Creation of Progress)</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-进程的中止"><span class="toc-text">2.2. 进程的中止</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#2-2-1-引起进程终止-Termination-of-Process-的事件"><span class="toc-text">2.2.1. 引起进程终止(Termination of Process)的事件</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-2-2-进程的终止过程"><span class="toc-text">2.2.2. 进程的终止过程</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-进程的阻塞与唤醒"><span class="toc-text">2.3. 进程的阻塞与唤醒</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#2-3-1-引起进程阻塞和唤醒的事件"><span class="toc-text">2.3.1. 引起进程阻塞和唤醒的事件</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-3-2-进程阻塞过程"><span class="toc-text">2.3.2. 进程阻塞过程</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-3-3-进程唤醒过程"><span class="toc-text">2.3.3. 进程唤醒过程</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-4-进程的挂起与激活"><span class="toc-text">2.4. 进程的挂起与激活</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#2-4-1-进程的挂起"><span class="toc-text">2.4.1. 进程的挂起</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-4-2-进程的激活过程"><span class="toc-text">2.4.2. 进程的激活过程</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-进程同步"><span class="toc-text">3. 进程同步</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-进程同步的概念"><span class="toc-text">3.1. 进程同步的概念</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#3-1-1-进程间制约关系"><span class="toc-text">3.1.1 进程间制约关系</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-1-2-临界资源"><span class="toc-text">3.1.2. 临界资源</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-1-3-临界区-critical-sections"><span class="toc-text">3.1.3. 临界区(critical sections)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-1-4-进程同步机制"><span class="toc-text">3.1.4. 进程同步机制</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-信号量机制"><span class="toc-text">3.2. 信号量机制</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#3-2-1-整型信号量"><span class="toc-text">3.2.1. 整型信号量</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-2-2-记录型信号量"><span class="toc-text">3.2.2. 记录型信号量</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#信号量的类型"><span class="toc-text">信号量的类型</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#信号量S取值意义"><span class="toc-text">信号量S取值意义</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-2-3-AND型信号量"><span class="toc-text">3.2.3. AND型信号量</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-2-4-信号量集"><span class="toc-text">3.2.4. 信号量集</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-3-信号量的应用"><span class="toc-text">3.3. 信号量的应用</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#3-3-1-利用信号量实现进程互斥"><span class="toc-text">3.3.1. 利用信号量实现进程互斥</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-3-2-利用信号量实现前趋关系"><span class="toc-text">3.3.2. 利用信号量实现前趋关系</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-3-3-利用信号量实现进程同步"><span class="toc-text">3.3.3. 利用信号量实现进程同步</span></a></li></ol></li></ol></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-4 i,
+        .toc-level-4 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+    </script>
+
+
+
+    
+<div class="share">
+    
+        <div class="bdsharebuttonbox">
+            <a href="#" class="fa fa-twitter bds_twi" data-cmd="twi" title="分享到推特"></a>
+            <a href="#" class="fa fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+            <a href="#" class="fa fa-qq bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+            <a href="#" class="fa fa-files-o bds_copy" data-cmd="copy" title="复制网址"></a>
+            <a href="#" class="fa fa fa-envelope-o bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+            <a href="#" class="fa fa-weixin bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+            <a href="#" class="fa fa-share-alt bds_more" data-cmd="more"></i></a>
+        </div>
+        <script>
+            window._bd_share_config={
+                "common":{"bdSnsKey":{},"bdText":"进程管理[更新中...]　| Oh_MyBug　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+        </script>
+    
+
+    
+</div>
+
+
+
+
+
+
+
+    
+        <section id="comments" style="margin: 2em; padding: 2em; background: rgba(255, 255, 255, 0.5)">
+    <div id="vcomment" class="comment"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//unpkg.com/valine@1.2.0-beta1/dist/Valine.min.js"></script>
+    <script>
+      new Valine({
+        el: '#vcomment',
+        notify: 'true',
+        verify: 'true',
+        app_id: "syE2SupQmwVgiUj9A3PkVhMU-gzGzoHsz",
+        app_key: "dcslOw47bfKK9PtzeIqLjV6e",
+        placeholder: "Just go go!",
+        avatar: "mp"
+      });
+    </script>
+</section>
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2020/04/15/%E8%A7%A3%E5%86%B3GitHub%E7%BD%91%E9%A1%B5%E4%B8%8A%E5%9B%BE%E7%89%87%E6%98%BE%E7%A4%BA%E5%A4%B1%E8%B4%A5%E9%97%AE%E9%A2%98/" title="上一篇: 解决GitHub网页上图片显示失败问题">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2020/04/11/Hexo%E4%B8%BB%E9%A2%98%E2%80%94%E2%80%94Yelee%E7%9A%84%E4%BD%BF%E7%94%A8-%E6%9B%B4%E6%96%B0%E4%B8%AD/" title="下一篇: Hexo主题——Yelee的使用[更新中...]">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2020/07/11/Morris%E4%BA%8C%E5%8F%89%E6%A0%91%E9%81%8D%E5%8E%86%E7%AE%97%E6%B3%95/">Morris二叉树遍历算法</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/07/09/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B9%8B%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/">设计模式之单例模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/05/16/%E6%B7%B1%E5%85%A5Web%E8%AF%B7%E6%B1%82%E8%BF%87%E7%A8%8B/">深入Web请求过程</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/27/Maven%E7%9A%84%E5%AE%89%E8%A3%85%E5%92%8C%E4%BD%BF%E7%94%A8/">Maven的安装和使用</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/25/Ant%E7%9A%84%E5%AE%89%E8%A3%85%E5%92%8C%E4%BD%BF%E7%94%A8/">Ant的安装和使用</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/23/Eclipse%E7%9A%84%E5%AE%89%E8%A3%85%E4%B8%8E%E4%BD%BF%E7%94%A8/">Eclipse的安装与使用</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/23/IDEA%E4%B8%BB%E9%A2%98%E4%B8%8E%E6%8F%92%E4%BB%B6/">如何让IntelliJ IDEA变得高效且舒适?</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/22/%E8%BD%BB%E9%87%8F%E7%BA%A7JavaEE%E4%BC%81%E4%B8%9A%E5%BA%94%E7%94%A8/">Tomcat的下载和安装</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/16/Anaconda%E5%AE%89%E8%A3%85%E4%B8%8E%E8%99%9A%E6%8B%9F%E7%8E%AF%E5%A2%83%E5%88%9B%E5%BB%BA/">Anaconda安装与虚拟环境创建</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/15/%E8%A7%A3%E5%86%B3GitHub%E7%BD%91%E9%A1%B5%E4%B8%8A%E5%9B%BE%E7%89%87%E6%98%BE%E7%A4%BA%E5%A4%B1%E8%B4%A5%E9%97%AE%E9%A2%98/">解决GitHub网页上图片显示失败问题</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/14/%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86-%E6%9B%B4%E6%96%B0%E4%B8%AD/">进程管理[更新中...]</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/11/Hexo%E4%B8%BB%E9%A2%98%E2%80%94%E2%80%94Yelee%E7%9A%84%E4%BD%BF%E7%94%A8-%E6%9B%B4%E6%96%B0%E4%B8%AD/">Hexo主题——Yelee的使用[更新中...]</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/09/Hexo%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/">Hexo个人博客搭建</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2020 Oh_MyBug
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 5;
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+
+    <script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script src="//cdn.bootcss.com/mathjax/2.6.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+            
+            
+            
+            
+            
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+<script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>

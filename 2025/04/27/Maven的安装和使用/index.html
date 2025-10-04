@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="Oh_MyBug" />
+
+
+
+<meta name="description" content="Maven到底是什么？...">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Maven的安装和使用">
+<meta property="og:url" content="https://oh-mybug.github.io/2020/04/27/Maven%E7%9A%84%E5%AE%89%E8%A3%85%E5%92%8C%E4%BD%BF%E7%94%A8/index.html">
+<meta property="og:site_name" content="Oh_MyBug">
+<meta property="og:description" content="Maven到底是什么？...">
+<meta property="og:image" content="https://oh-mybug.github.io/2020/04/27/Maven%E7%9A%84%E5%AE%89%E8%A3%85%E5%92%8C%E4%BD%BF%E7%94%A8/1.jpg">
+<meta property="og:image" content="https://oh-mybug.github.io/2020/04/27/Maven%E7%9A%84%E5%AE%89%E8%A3%85%E5%92%8C%E4%BD%BF%E7%94%A8/2.jpg">
+<meta property="og:image" content="https://oh-mybug.github.io/2020/04/27/Maven%E7%9A%84%E5%AE%89%E8%A3%85%E5%92%8C%E4%BD%BF%E7%94%A8/3.jpg">
+<meta property="og:image" content="https://oh-mybug.github.io/2020/04/27/Maven%E7%9A%84%E5%AE%89%E8%A3%85%E5%92%8C%E4%BD%BF%E7%94%A8/4.jpg">
+<meta property="og:image" content="https://oh-mybug.github.io/2020/04/27/Maven%E7%9A%84%E5%AE%89%E8%A3%85%E5%92%8C%E4%BD%BF%E7%94%A8/5.png">
+<meta property="og:image" content="https://oh-mybug.github.io/2020/04/27/Maven%E7%9A%84%E5%AE%89%E8%A3%85%E5%92%8C%E4%BD%BF%E7%94%A8/6.jpg">
+<meta property="og:image" content="https://oh-mybug.github.io/2020/04/27/Maven%E7%9A%84%E5%AE%89%E8%A3%85%E5%92%8C%E4%BD%BF%E7%94%A8/7.jpg">
+<meta property="article:published_time" content="2020-04-27T15:07:45.000Z">
+<meta property="article:modified_time" content="2020-04-27T15:07:45.000Z">
+<meta property="article:author" content="Oh_MyBug">
+<meta property="article:tag" content="Java EE">
+<meta property="article:tag" content="Maven">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://oh-mybug.github.io/2020/04/27/Maven%E7%9A%84%E5%AE%89%E8%A3%85%E5%92%8C%E4%BD%BF%E7%94%A8/1.jpg">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="Oh_MyBug" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/OhMyBug.ico">
+
+
+
+    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>Maven的安装和使用 | Oh_MyBug</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: true
+    }
+</script>
+
+
+    <script>
+        yiliaConfig.jquery_ui = [true, "//cdn.bootcss.com/jqueryui/1.10.4/jquery-ui.min.js", "//cdn.bootcss.com/jqueryui/1.10.4/css/jquery-ui.min.css"];
+    </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/img/Oh_MyBug.jpg" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">Oh_MyBug</a></h1>
+        </hgroup>
+
+        
+
+        
+            <form id="search-form">
+            <input type="text" id="local-search-input" name="q" placeholder="search..." class="search form-control" autocomplete="off" autocorrect="off" searchonload="false" />
+            <i class="fa fa-times" onclick="resetSearch()"></i>
+            </form>
+            <div id="local-search-result"></div>
+            <p class='no-result'>No results found <i class='fa fa-spinner fa-pulse'></i></p>
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/tags/">标签云</a></li>
+                        
+                            <li><a href="/about/">关于我</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa GitHub" href="https://github.com/Oh-MyBug" target="_blank" rel="noopener" title="GitHub"></a>
+                            
+                                <a class="fa CSDN" href="https://blog.csdn.net/Oh_MyBug" target="_blank" rel="noopener" title="CSDN"></a>
+                            
+                                <a class="fa 微信" href="/Oh_MyBug" title="微信"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Anaconda/" rel="tag">Anaconda</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Ant/" rel="tag">Ant</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Eclipse/" rel="tag">Eclipse</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/GitHub/" rel="tag">GitHub</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/" rel="tag">Hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/IDEA/" rel="tag">IDEA</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java-EE/" rel="tag">Java EE</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaWeb/" rel="tag">JavaWeb</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Maven/" rel="tag">Maven</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Operating-System/" rel="tag">Operating System</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Process/" rel="tag">Process</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Yelee/" rel="tag">Yelee</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/" rel="tag">单例模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" rel="tag">设计模式</a></li></ul>
+                    </div>
+                </section>
+                
+                
+                
+
+                
+                
+                <section class="switch-part switch-part3">
+                
+                    <div id="js-aboutme">勤勤恳恳、努力学习、一直进步、高效DeBug的Creator</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">Oh_MyBug</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/img/Oh_MyBug.jpg" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">Oh_MyBug</a></h1>
+            </hgroup>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/tags/">标签云</a></li>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa GitHub" target="_blank" href="https://github.com/Oh-MyBug" title="GitHub"></a>
+                            
+                                <a class="fa CSDN" target="_blank" href="https://blog.csdn.net/Oh_MyBug" title="CSDN"></a>
+                            
+                                <a class="fa 微信" target="_blank" href="/Oh_MyBug" title="微信"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
+</nav>
+      <div class="body-wrap"><article id="post-Maven的安装和使用" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2020/04/27/Maven%E7%9A%84%E5%AE%89%E8%A3%85%E5%92%8C%E4%BD%BF%E7%94%A8/" class="article-date">
+      <time datetime="2020-04-27T15:07:45.000Z" itemprop="datePublished">2020-04-27</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Maven的安装和使用
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java-EE/" rel="tag">Java EE</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Maven/" rel="tag">Maven</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <h3 id="1-前言"><a href="#1-前言" class="headerlink" title="1 前言"></a>1 前言</h3><p>Maven是一个比Ant更先进的项目管理工具，它采用一种“约定优于配置（CoC）”的策略来管理项目。它不仅用于把源代码构建成可发布的项目（包括编译、打包、测试和分发），还可以生成报告、生成Web站点等。</p>
+<h3 id="2-下载和安装Maven"><a href="#2-下载和安装Maven" class="headerlink" title="2 下载和安装Maven"></a>2 下载和安装Maven</h3><p>下载和安装Maven按如下步骤进行：</p>
+<p><strong>Step 1</strong>：登录<a href="http://maven.apache.org/download.cgi" target="_blank" rel="noopener">Maven站点</a>下载Maven最新版。虽然Maven是基于Java的生成工具，具有平台无关的特性，但考虑到解压缩的方便性，通常建议Windows平台下载*.zip压缩包，而Linux平台下载.gz压缩包。</p>
+<p><strong>Step 2</strong>：将下载的压缩文件解压缩到任意路径，解压缩后看到如下文件结构：</p>
+<ul>
+<li>bin：保存Maven的可执行命令。其中<code>mvn</code>和<code>mvn.bat</code>就是执行Maven工具的命令。</li>
+<li>boot：该目录只包含一个<code>plexus-classworlds-2.6.0.jar</code>。<code>plexus-classworlds</code>是一个类加载器框架，与默认的Java类加载器相比，它提供了更丰富的语法以方便配置，Maven使用该框架加载自己的类库。通常无需理会。</li>
+<li>conf：保存Maven配置文件的目录，该目录包含<code>settings.xml</code>文件，该文件用于设置Maven的全局行为。通常建议将该文件复制到<code>~/.m2/</code>目录下（~表示用户目录），这样可以只设置当前用户的Maven行为。</li>
+<li>lib：该目录包含了所有Maven运行时需要的类库，Maven本身是分模块开发的，因此用户能看到诸如<code>maven-core-3.6.3.jar</code>、<code>maven-repository-metadata-3.6.3.jar</code>等文件。此外，还包含Maven所依赖的第三方类库。</li>
+<li>LICENSE、README.txt等说明文档。</li>
+</ul>
+<p><strong>Step 3</strong>：Maven的运行需要如下两个环境变量：</p>
+<ul>
+<li>JAVA_HOME：该环境变量应指向JDK安装路径。如果已经成功安装了Tomcat，则环境变量应该是已经正确的</li>
+<li>M2_HOME：该环境变量应指向Maven安装路径。</li>
+</ul>
+<p><strong>提示</strong>：Maven安装路径就是前面释放Maven压缩文件的路径。Maven安装路径下应该包含bin、boot、conf和lib4个文件夹。</p>
+<p><strong>Step 4</strong>：Maven工具的关键命令就是<code>%M2_HOME%/bin</code>路径下的<code>mvn.bat</code>命令，如果希望操作系统可以识别该命令，还应该将<code>%M2_HOME%/bin</code>路径添加到操作系统的PATH环境变量之中。</p>
+<p><strong>Step 5</strong>（可选）：在<code>%M2_HOME%/conf/settings.xml</code>中添加如下代码，因为使用Maven过程中涉及很多插件的下载，而这些插件都是在国外Maven的中央仓库，下载会很缓慢，所以添加国内的镜像的话下载速度会起飞哦！</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">mirrors</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">mirror</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">id</span>&gt;</span>alimaven<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>aliyun maven<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">url</span>&gt;</span>http://maven.aliyun.com/nexus/content/groups/public/<span class="tag">&lt;/<span class="name">url</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">mirrorOf</span>&gt;</span>central<span class="tag">&lt;/<span class="name">mirrorOf</span>&gt;</span>        </span><br><span class="line">  <span class="tag">&lt;/<span class="name">mirror</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">mirrors</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>经过上面5个步骤，Maven安装成功，启动命令行窗口，输入如下命令（如果未将<code>%M2_HOME%/bin</code>路径添加到操作系统的PATH环境变量之中，则输入<code>mvn.bat</code>的全路径）：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mvn help:system</span><br></pre></td></tr></table></figure>
+
+<p>通过该命令应该先看到Maven不断地从网络下载各种文件，然后会显示如下两类信息：</p>
+<ul>
+<li>System Properties</li>
+<li>Environment Variables</li>
+</ul>
+<p>如果能看到Maven输出如上两类信息，则表明Maven安装成功。</p>
+<h3 id="3-设置Maven"><a href="#3-设置Maven" class="headerlink" title="3 设置Maven"></a>3 设置Maven</h3><p>设置Maven行为有两种方式</p>
+<ul>
+<li>全局方式：通过Maven安装目录下的<code>conf/settings.xml</code>文件进行设置</li>
+<li>当前用户方式：通过用户Home目录<code>C:\Users\用户名\</code>的<code>m2\</code>目录下的<code>settings.xml</code>文件进行设置</li>
+</ul>
+<p>上面两种方式只是起作用的范围不同，但它们都是用<code>settings.xml</code>作为配置文件，而且两种方式中<code>settings.xml</code>文件允许定义的元素也是相同的。</p>
+<p>通常来说，Maven允许设置如下参数：</p>
+<ul>
+<li>localRepository：该参数通过<code>&lt;localRepository.../&gt;</code>元素设置，该元素的内容是一个路径字符串，该路径用于设置Maven的本地资源库的路径。如果用户不设置该参数，Maven本地资源库默认保存在用户Home目录的<code>m2/repository</code>路径下。Windows系统建议将该Maven本机资源库设置到其他路径。</li>
+</ul>
+<p><strong>提示</strong>：资源库是Maven的一个重要概念，Maven构建项目所使用的插件、第三方依赖库都集中存放在本地资源库中。</p>
+<ul>
+<li>interactiveMode：该参数通过<code>&lt;interactiveMode.../&gt;</code>元素设置，该参数设置Maven是否处于交互模式——如果将Maven设为交互模式，每当Maven需要用户输入时，Maven都会提示用户输入。但如果将该参数设置为false，那么Maven将不会提示用户输入，而是“智能”地使用默认值。</li>
+<li>offline：该参数设置Maven是否处于离线状态，如果将该参数设为false，每当Maven找不到插件、依赖库时，Maven总会尝试从网络下载</li>
+<li>proxies：该参数用于为Maven设置代理服务器。该参数可包含多个<code>&lt;proxy.../&gt;</code>，每个<code>&lt;proxy.../&gt;</code>设置一个代理服务器，包括代理服务器地ID、协议、代理服务器地址、代理服务器端口、用户名、密码等信息，Maven可通过代理服务器访问网络</li>
+</ul>
+<p>如果网络通常，通常只需通过localReposity设置Maven的本地资源库路径，接下来即可正常使用Maven工具了。</p>
+<p>前面已经提到，Maven工具的命令主要就是mvn，该命令的基本格式是：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mvn &lt;plugin-prefix&gt;:&lt;goal&gt; -D&lt;属性名&gt;&#x3D;&lt;属性值&gt; ...</span><br></pre></td></tr></table></figure>
+<p>上面mvn命令中，<code>plugin-prefix</code>是一个有效的插件前缀，goal就是该插件所包含的制定目标，-D用于为该目标指定属性，每次运行mvn命令可通过多个-D选项来指定属性名、属性值</p>
+<p><strong>提示</strong>：除了使用plugin-prefix的形式来代表指定插件之外，还可使用如下命令来运行指定插件：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mvn &lt;plugin-group-id&gt;:&lt;plugin-artifact-id&gt;[:&lt;plugin-version&gt;:&lt;goal&gt;</span><br></pre></td></tr></table></figure>
+<p>其中<code>plugin-group-id</code>、<code>plugin-artifact-id</code>、<code>plugin-version</code>被称为Maven坐标，可用于唯一地表示某个项目</p>
+<p>对于前面验证Maven是否安装成功所用的命令：<code>mvn help:system</code>，其中help就是一个典型的Maven插件，system就是help插件的goal</p>
+<p><strong>提示</strong>：Maven插件是一个非常重要的概念，从某种程度来看，Maven核心是一个空的“容器”。Maven核心其实并不做什么实际的事情，它只是解析一些XML文档，管理生命周期和插件，除此之外，Maven什么也不懂。Maven的强大来自于它的插件，这些插件可以编译源代码、打包二进制代码、发布站点等。换句话说，Maven的“空”才是它的强大，因为Maven是“空”的，所以它可以装各种插件，因此它的功能可以无限扩展。直接从Apache下载的Maven不知道如何编译Java代码，不知道如何打包WAR文件，也不知道如何运行单元测试….它什么都不懂。当开发者第一次使用全新的Maven运行诸如<code>mvn install</code>命令时，Maven会自动从远程资源库下载大部分核心Maven插件。</p>
+<h3 id="4-创建、构建简单的项目"><a href="#4-创建、构建简单的项目" class="headerlink" title="4 创建、构建简单的项目"></a>4 创建、构建简单的项目</h3><p>创建项目使用Maven的archetype插件，关于Maven插件的功能和用法可登录<code>http://maven.apache.org/plugins/index.html</code>页面进行查看，该页面显示了各种Maven插件的列表。</p>
+<div style="width:70%;margin:auto">
+<img src="/2020/04/27/Maven%E7%9A%84%E5%AE%89%E8%A3%85%E5%92%8C%E4%BD%BF%E7%94%A8/1.jpg" class="" title="查看Maven插件">
+</div>
+
+<p>其中显示了创建项目需要使用的archetype插件，单击该链接即可打开archetype插件使用说明</p>
+<div style="width:70%;margin:auto">
+<img src="/2020/04/27/Maven%E7%9A%84%E5%AE%89%E8%A3%85%E5%92%8C%E4%BD%BF%E7%94%A8/2.jpg" class="" title="archetype插件使用说明">
+</div>
+
+<p>从图中可以看出，Maven的archetype插件包含如下目标(goal)</p>
+<ul>
+<li>archetype:generate：使用指定原型创建一个Maven项目</li>
+<li>archetype:create-from-project：使用已有的项目创建Maven项目</li>
+<li>archetype:crawl：从仓库中搜索原型</li>
+</ul>
+<p>从上面介绍可以看出，使用<code>mvn archetype:generate</code>命令即可创建Maven项目，使用该命令还需要指定一些参数（通过-D选项指定）,单击”archetype:generate”链接即可看到如图所示的参数页面。</p>
+<div style="width:70%;margin:auto">
+<img src="/2020/04/27/Maven%E7%9A%84%E5%AE%89%E8%A3%85%E5%92%8C%E4%BD%BF%E7%94%A8/3.jpg" class="" title="archetype插件参数">
+</div>
+
+<p>上面介绍的过程就是通过官方站点查看Maven插件的过程，由于Maven支持的插件非常多，而且每个插件有可能包含多个目标，所以应该掌握Maven插件的技巧。</p>
+<p>掌握archetype插件的用法之后，即可使用如下命令来创建简单的Java项目：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mvn archetype:generate -DinteractiveMode&#x3D;false -DgroupId&#x3D;org.fkjava -DartifactId&#x3D;mavenQs -Dpackage&#x3D;org.fkjava.mavenqs</span><br></pre></td></tr></table></figure>
+
+<p>如果用户第一次执行该命令，将看到Maven不断地从网络下载各种文件的信息，这是Maven正从网络下载archetype插件的各种相关文件。</p>
+<p><strong>提示</strong>：实际运行该命令时，可能运行失败——只要网络状态不好，就可能无法正常从网络下载archetype插件的各种相关文件，上面命令就会下载失败，第一次执行Maven的某个插件时往往很容易失败，可以多尝试几次。</p>
+<p>上面命令执行完成后，会生成一个mavenQs文件夹，该文件夹的内容如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">mavenQs</span><br><span class="line">├─pom.xml</span><br><span class="line">└─src</span><br><span class="line">    ├─main</span><br><span class="line">    │  └─java</span><br><span class="line">    │      └─org</span><br><span class="line">    │          └─fkjava</span><br><span class="line">    │              └─mavenqs</span><br><span class="line">    |                   └─App.java</span><br><span class="line">    └─test</span><br><span class="line">        └─java</span><br><span class="line">            └─org</span><br><span class="line">                └─fkjava</span><br><span class="line">                    └─mavenqs</span><br><span class="line">                         └─AppTest.java</span><br></pre></td></tr></table></figure>
+
+<p>上面项目中的App.java是archetype插件生成的一个简单的Java类，而AppTest则是该插件App生成的测试用力</p>
+<p>除此之外，还可以看到该项目的根路径下包含一个pom.xml文件，该文件的作用类似于Ant的build.xml文件，但它的内容比build.xml文件的内容简洁得多</p>
+<p>打开pom.xml文件可以看到如下内容：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">project</span> <span class="attr">xmlns</span>=<span class="string">"http://maven.apache.org/POM/4.0.0"</span> <span class="attr">xmlns:xsi</span>=<span class="string">"http://www.w3.org/2001/XMLSchema-instance"</span></span></span><br><span class="line"><span class="tag">  <span class="attr">xsi:schemaLocation</span>=<span class="string">"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">modelVersion</span>&gt;</span>4.0.0<span class="tag">&lt;/<span class="name">modelVersion</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.fkjava<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>mavenQs<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">packaging</span>&gt;</span>jar<span class="tag">&lt;/<span class="name">packaging</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.0-SNAPSHOT<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">name</span>&gt;</span>mavenQs<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">url</span>&gt;</span>http://maven.apache.org<span class="tag">&lt;/<span class="name">url</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>junit<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>junit<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.8.1<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">scope</span>&gt;</span>test<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">project</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>pom.xml文件被称为项目对象模型（Project Object Model）描述文件，Maven使用一种被称为项目对象模型的方式来管理项目，POM用于描述如下问题：该项目是什么类型的？该项目的名称是什么？该项目的构建能自定义吗？Maven使用pom.xml文件来描述项目对象模型。因此，pom.xml并不是简单的生成文件，而是一种项目对象模型的描述文件。</p>
+<p>上面所看到的pom.xml文件将是Maven项目中最简单的。一般来说，实际pom.xml文件将比这个文件更复杂：它会定义多个依赖，定义额外的插件等。上面pom.xml中的<code>&lt;groupId.../&gt;</code>、<code>&lt;artifactId.../&gt;</code>、<code>&lt;packaging.../&gt;</code>、<code>&lt;version.../&gt;</code>定义了该项目的唯一标识（几乎所有的pom.xml文件都需要定义他们），这个唯一标识被称为<strong>Maven坐标</strong>(<strong>coordinate</strong>)。<code>&lt;name.../&gt;</code>和<code>&lt;url.../&gt;</code>元素只是pom.xml提供的描述性元素，用于提供可阅读的名字。</p>
+<p>上面的pom.xml文件还包含了一个<code>&lt;dependencies.../&gt;</code>元素，该元素定义了一个单独的测试范围的依赖，这表明该项目的测试依赖于JUnit测试框架。</p>
+<p>从上面代码可以看出，pom.xml文件仅仅包含了该项目的版本、groupId、artifactId等坐标信息。并未指定任何编译Java程序、打包、运行Java程序的详细命令。那么这份文件是否能编译、打包项目呢？</p>
+<p>在pom.xml所在路径下输入命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mvn compile</span><br></pre></td></tr></table></figure>
+
+<p>上面命令使用mvn运行compile插件的默认目标。如果用户第一次执行该命令，将可以看到Maven不断从网络下载各种文件的信息，这是Maven正从网络下载compile插件的各种相关文件。</p>
+<p>如果网络状态没有问题，Maven将会先下载compile插件，额案后即可成功执行compie插件，这样将会正常编译该项目。</p>
+<p><strong>注意</strong>：如果执行compile时出现以下报错，则在pom.xml文件中增加maven编译的jdk版本设置，maven.compiler.source和maven.compiler.target，另外java.version最好也加上。我的jdk版本是jdk-13.0.2，所以写13。</p>
+<div style="width:70%;margin:auto">
+<img src="/2020/04/27/Maven%E7%9A%84%E5%AE%89%E8%A3%85%E5%92%8C%E4%BD%BF%E7%94%A8/4.jpg" class="" title="mvn compile报错">
+</div>
+
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">properties</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">project.build.sourceEncoding</span>&gt;</span>UTF-8<span class="tag">&lt;/<span class="name">project.build.sourceEncoding</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">maven.compiler.encoding</span>&gt;</span>UTF-8<span class="tag">&lt;/<span class="name">maven.compiler.encoding</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">java.version</span>&gt;</span>13<span class="tag">&lt;/<span class="name">java.version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">maven.compiler.source</span>&gt;</span>13<span class="tag">&lt;/<span class="name">maven.compiler.source</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">maven.compiler.target</span>&gt;</span>13<span class="tag">&lt;/<span class="name">maven.compiler.target</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">properties</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>项目编译完成后，接下来可以使用Maven的exec插件来执行Java类。使用Maven执行Java程序的命令如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mvn exec:java -Dexec.mainClass&#x3D;&quot;org.fkjava.mavenqs.App&quot;</span><br></pre></td></tr></table></figure>
+
+<p>上面命令中的<code>org.fkjava.mavenqs.App</code>就是该Maven项目所生成的主类。</p>
+<p>执行上面命令，Maven将再次通过网络不断地下载exec插件所需要的各种文件，等exec插件下载完成后，成功执行该插件将可以看到如下输出：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Hello World!</span><br></pre></td></tr></table></figure>
+
+<p>上面输出的就是<code>org.fkjava.mavenqs.App</code>类中main()方法的输出结果</p>
+<p>你可能会感到好奇：Maven怎么这么神奇呢？这份pom.xml文件如此简单，Maven怎么知道如何编译项目？Maven怎么知道项目源文件放在那里？Maven怎么知道编译生成的二进制文件放在哪里？……</p>
+<p>实际上，Maven运行时pom.xml是根据设置组合来运行的，每个Maven项目的pom.xml都有一个上级pom.xml，当前项目的pom.xml的设置信息会被合并到上级pom.xml中，上级pom.xml（相当于Maven默认的pom.xml）定义了该项目大量的默认设置。如果用户希望看到Maven项目实际起作用的pom.xml（也就是上级pom.xml与当前pom.xml合并后的结果），可以运行如下命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mvn help:effective-pom</span><br></pre></td></tr></table></figure>
+
+<p>第一次运行该命令，Maven也会不断地从网络下载一些文件，然后就会看到一个庞大的、完整的pom.xml文件，它包含Maven大量的默认设置。如果希望改变其中某些默认的设置，也可以在当前项目的pom.xml中定义对应的元素来覆盖上级pom.xml中的默认设置</p>
+<h3 id="5-Maven的核心概念"><a href="#5-Maven的核心概念" class="headerlink" title="5 Maven的核心概念"></a>5 Maven的核心概念</h3><p>从前面介绍的过程来看，只要将项目的源文件按Maven要求的规范组织，并提供pom.xml文件，即使pom.xml文件中只包含极少的信息，也依然可以使用Maven来编译项目、运行程序，甚至可以运行测试用例、打包项目，这是因为Maven采用了”约定优于配置（Convention over Configuration，CoC）”的原则，根据此原则，Maven的主要约定有如下几条。</p>
+<ul>
+<li>源代码应该位于<code>${basedir}/src/main/java</code>路径下</li>
+<li>资源文件应该位于<code>${basedir}/src/main/resourse</code>路径下</li>
+<li>测试代码应该位于<code>${basedir}/src/test</code>路径下</li>
+<li>编译生成的class文件应该位于<code>${basedir/target/classes}</code>路径下</li>
+<li>项目应该会产生一个JAR文件，并将生成的JAR包放在<code>${basedir}/target</code>路径下</li>
+</ul>
+<p>通过这种约定，就可以避免像Ant构建那牙膏必需为每个子项目定义这些目录。除此之外，Maven对核心插件也使用了一组通用的约定，用来编译源代码、打包可分发的JAR、生成Web站点，以及许多其他的过程</p>
+<p>Maven的强大很大程度来自于它的“约定”，Maven月定义了一个固定的生命周期，以及一组用于构建和装配软件的通用插件，如果完全遵守这些约定，Maven只需要将源代码放到正确的目录下，Maven即可处理剩下的事情</p>
+<p>使用CoC的一个副作用是，用户可能会觉得他们被强迫使用一种固定的流程和方法，甚至对某些约定反感。不过不用担心，所有遵守CoC原则的技术通常都会提供一种机制允许用户进行配置。以Maven为例，项目源代码的资源文件的位置可以被自定义，JAR文件的名字可以被自定义…..换句话说，如果不想遵守约定，Maven也会自定义默认值来改变约定</p>
+<h4 id="5-1-Maven的生命周期（lifecycle）"><a href="#5-1-Maven的生命周期（lifecycle）" class="headerlink" title="5.1 Maven的生命周期（lifecycle）"></a>5.1 Maven的生命周期（lifecycle）</h4><p>依然使用前面介绍的mavenQS项目，进入pom.xml文件所在的路径，然后执行如下命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mvn install</span><br></pre></td></tr></table></figure>
+
+<p>第一次运行该命令同样会看到Maven不断地从网络下载各种插件，下载完成后可以看到该命令将会依次执行如下插件：</p>
+<p>上面命令只是告诉Maven运行install，但从实际的运行结果来看，Maven不仅运行了install，而且还在该插件之前运行了大量的插件。这就是Maven生命周期所导致的。</p>
+<p>生命周期是指Maven构建项目包含多个有序的阶段（phase），Maven可以支持许多不同的生命周期，最常用的生命周期是Maven默认的生命周期。</p>
+<p>Maven生命周期中的元素被称为phase（阶段），每个生命周期由多个阶段组成，Maven生命周期中的各阶段总是按顺序、依次执行，<strong>Maven默认的生命周期的开始阶段是验证项目的基本完整性，结束阶段是将项目发布到远程仓库</strong>。</p>
+<p>实际上，mvn命令除了可以使用<code>&lt;plugin-prefix&gt;:&lt;goal&gt;</code>运行指定插件的目标之外，还可以使用如下命令格式：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mvm &lt;phase1&gt; &lt;phase2&gt;...</span><br></pre></td></tr></table></figure>
+
+<p>上面命令告诉Maven执行Maven生命周期中的一个或多个阶段。当使用mvn命令告诉Maven执行生命周期的某个阶段时，Maven会自动从生命周期的第一个阶段开始执行，直至mvn命令指定的阶段。</p>
+<p>Maven包含三个基本的生命周期。</p>
+<ul>
+<li>clean生命周期</li>
+<li>default生命周期</li>
+<li>site生命周期</li>
+</ul>
+<p>clean生命周期用于在构建项目之前进行一些处理工作，该生命周期包含如下三个核心阶段。</p>
+<ul>
+<li>pre-clean：在构建之前执行预清理</li>
+<li>clean：执行清理</li>
+<li>post-clean：最后清理</li>
+</ul>
+<p>进入mavenQs项目中pom.xml所在的路径，执行如下命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mvm post-clean</span><br></pre></td></tr></table></figure>
+
+<p>执行上面命令将会清理项目编译过程中生成的文件，执行该命令后将可以看到mavenQs目录下只剩下src目录和pom.xml文件</p>
+<p>默认的生命周期则包含了项目构建的核心部分，默认的生命周期包含如下核心阶段：</p>
+<ul>
+<li>compile：编译项目</li>
+<li>test：单元测试</li>
+<li>package：项目打包</li>
+<li>install：安装到本地仓库</li>
+<li>deploy：部署到远程仓库</li>
+</ul>
+<p><code>mvn compile</code>、<code>mvn install</code>命令所执行的都是上面列出的阶段。当使用Maven执行<code>mvn install</code>时，是即将会先执行isntall阶段之前的阶段。下图显示了默认的生命周期所包含的核心阶段的执行过程。</p>
+<div style="width:70%;margin:auto">
+<img src="/2020/04/27/Maven%E7%9A%84%E5%AE%89%E8%A3%85%E5%92%8C%E4%BD%BF%E7%94%A8/5.png" class="" title="Maven默认生命周期的各阶段">
+</div>
+
+<p>上面列出的只是Maven默认生命周期的核心阶段。实际上，Maven默认的生命周期包含如下阶段：</p>
+<ul>
+<li>validate：验证项目是否正确</li>
+<li>generate-sources：生成源代码</li>
+<li>process-sources：处理源代码</li>
+<li>generate-resources：生成项目所需的资源文件</li>
+<li>process-resources：复制资源文件至目标目录</li>
+<li>compile：编译项目的源代码</li>
+<li>process-classes：处理编译生成的文件</li>
+<li>generate-test-sources：生成测试源代码</li>
+<li>process-test-sources：处理测试源代码</li>
+<li>generate-test-resources：生成测试的资源文件</li>
+<li>process-test-resources：复制测试的资源文件至测试目标目录</li>
+</ul>
+<p>site 生命周期用于生成项目报告站点、发布站点。该生命周期包含如下核心阶段：</p>
+<ul>
+<li>pre-site：生成站点之前做验证</li>
+<li>site：生成站点</li>
+<li>post-site：生成站点之后做验证</li>
+<li>site-deploy：发布站点到远程服务器</li>
+</ul>
+<p>进入mavenQs项目中pom.xml所在的路径，执行如下命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mvn post-site</span><br></pre></td></tr></table></figure>
+<p>第一次执行该命令时，将会看到Maven不断地下载插件及相关文件，成功执行该命令后将可以看到mavenQs目录下多出一个target目录，该目录下包含一个site子目录。打开site子目录下的index.htm，将可以看到如图所示的页面。</p>
+<p><strong>注意</strong>：如果出现如下报错，在pom.xml中指定对应的版本即可</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; 报错关键字</span><br><span class="line">org.apache.maven.doxia.siterenderer.DocumentContent</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">build</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">pluginManagement</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">plugins</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupID</span>&gt;</span>org.apache.maven.plugins<span class="tag">&lt;/<span class="name">groupID</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-site-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.7.1<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.maven.plugins<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-project-info-reports-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.9<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">plugins</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">pluginManagement</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">build</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<div style="width:70%;margin:auto">
+<img src="/2020/04/27/Maven%E7%9A%84%E5%AE%89%E8%A3%85%E5%92%8C%E4%BD%BF%E7%94%A8/6.jpg" class="" title="使用site生命周期生成的站点报告">
+</div>
+
+<h4 id="5-2-插件和目标-plugins-and-goal"><a href="#5-2-插件和目标-plugins-and-goal" class="headerlink" title="5.2 插件和目标(plugins and goal)"></a>5.2 插件和目标(plugins and goal)</h4><p>除了可以使用Maven官方、第三方提供的各种插件之外，也可以开发自定义插件，通过自定义插件来完成任务。</p>
+<p>每个插件又可以包含多个可执行的目标(goal)，使用mvn命令执行指定目标的格式如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mvn &lt;plugin-prefix&gt;:&lt;goal&gt; -D&lt;属性名&gt;&#x3D;&lt;属性值&gt; ...</span><br></pre></td></tr></table></figure>
+
+<p>当使用mvn运行Maven生命周期的指定阶段时，各阶段所完成的工作其实也是由插件实现的。插件目标可以绑定到生命周期的各阶段上，每个阶段可能绑定了零个或者多个目标。随着Maven沿着生命周期的阶段移动，它会自动执行绑定在各特定阶段上的所有目标。</p>
+<p>Maven生命周期的各阶段也是一个抽象的概念，对于软件构建过程来说，默认的生命周期被划分为compile、test、package、install、deploy这5个阶段，但这5个阶段分别运行什么插件、目标，其实是抽象的——这些阶段对于不同项目来说意味着不同的事情。例如，package阶段在某些项目中对应于生成一个JAR，它意味着“将一个项目打成一个JAR包”；而在另一个项目里，package阶段可能对应于生成一个WAR包。</p>
+<p>开发时可以将任意插件绑定到指定生命周期，例如将上面的mavenQs项目另外复制一份，并在其pom.xml文件中增加如下配置：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">build</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">plugins</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">      <span class="comment">&lt;!-- 下面3个元素顶一个exec插件的坐标 --&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.codehaus.mojo<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>exec-maven-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.3.1<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">executions</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">execution</span>&gt;</span></span><br><span class="line">          <span class="comment">&lt;!-- 指定绑定到compile阶段 --&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">phase</span>&gt;</span>compile<span class="tag">&lt;/<span class="name">phase</span>&gt;</span>  <span class="comment">&lt;!-- ① --&gt;</span></span><br><span class="line">          <span class="comment">&lt;!-- 指定运行exec插件的java目标 --&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">goals</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">goal</span>&gt;</span>java<span class="tag">&lt;/<span class="name">goal</span>&gt;</span>  <span class="comment">&lt;!-- ② --&gt;</span></span><br><span class="line">          <span class="tag">&lt;/<span class="name">goals</span>&gt;</span></span><br><span class="line">          <span class="comment">&lt;!-- configuration元素用于为插件的目标配置参数 --&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">            <span class="comment">&lt;!-- 下面元素配置mainClass参数的值为：org.fkjava.mavenqs.App --&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">mainClass</span>&gt;</span>org.fkjava.mavenqs.App<span class="tag">&lt;/<span class="name">mainClass</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span>                            </span><br><span class="line">        <span class="tag">&lt;/<span class="name">execution</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">executions</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">plugins</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">build</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>①号配置代码指定该插件、目标绑定到compile阶段；②号配置代码指定运行exec插件的java目标。通过上面这段配置，即可将exec插件的java目标绑定到compile阶段。</p>
+<p>进入该项目中pom.xml所在的路径，然后执行命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mvn compile</span><br></pre></td></tr></table></figure>
+
+<p>执行上面命令不仅可以看到Maven执行compile插件的compile目标来编译项目，还可以看到Maven执行exec插件的java目标来运行项目的<code>org.fkjava.mavenqs.App</code>类</p>
+<h4 id="5-3-Maven的坐标-coordinate"><a href="#5-3-Maven的坐标-coordinate" class="headerlink" title="5.3 Maven的坐标(coordinate)"></a>5.3 Maven的坐标(coordinate)</h4><p>POM需要为项目提供一个唯一标识符，这个标识符就被称为Maven坐标，Maven坐标由4个元素组成。</p>
+<ul>
+<li>groupId：该项目的开发者的域名</li>
+<li>artifactId：指定项目名</li>
+<li>package：指定项目打包的类型</li>
+<li>version：指定项目的版本</li>
+</ul>
+<p>例如，mavenQs项目的pom.xml文件中如下配置定义了该项目的Maven坐标：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.fkjava<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>mavenQs<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">packaging</span>&gt;</span>jar<span class="tag">&lt;/<span class="name">packaging</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">version</span>&gt;</span>1.0-SNAPSHOT<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>Maven坐标可用于精确定位一个项目，例如mavenQs项目中还有如下配置片段：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>junit<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>junit<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.8.1<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">scope</span>&gt;</span>test<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>上面配置片段定义了一个依赖关系，这段配置表明该项目依赖于junit3.8.1，其中的2-4行代码就是junit项目的坐标。</p>
+<p>Maven坐标通常英文冒号作为分隔符来书写，即以<code>groupId:artifactId:packaging:version</code>格式书写。例如mavenQs项目的坐标可写成<code>org.fkjava.mavenQs:jar:1.0-SNAPSHOT</code>。而mavenQs项目所依赖的项目的坐标则可写成<code>junit:junit:jar:3.8.1</code>。</p>
+<h4 id="5-4-Maven的资源库-reposity"><a href="#5-4-Maven的资源库-reposity" class="headerlink" title="5.4 Maven的资源库(reposity)"></a>5.4 Maven的资源库(reposity)</h4><p>第一行运行Maven时，Maven会自动从远程资源库下载很多文件，包括各种Maven插件，以及项目所以来的库。实际上，初始的Maven工具非常小，这是因为Maven工具本身的功能非常有限，几乎所有功能都是由Maven插件完成的。</p>
+<p>Maven资源库用于保存Maven插件， 以及各种第三方框架。简单来说，Maven用到的插件、项目依赖的各种JAR包，都会保存在资源库中。</p>
+<p>Maven资源库可分为如下三种：</p>
+<ul>
+<li>本地资源库：Maven用到的所有插件、第三方框架都会下载到本地库。只有当本地库中找不到时，才采取从远程下载。可以通过Maven安装目录下的conf\settings.xml文件，或者用户Home目录下的m2\settings.xml文件中的<code>&lt;localReposity.../&gt;</code>元素进行设置。</li>
+<li>远程资源库：远程资源库通常由公司或团队进行集中维护。通过远程资源库，可以让全公司的项目使用相同的JAR包系统</li>
+<li><a href="http://repo1.maven.org/maven2" target="_blank" rel="noopener">中央资源库</a>（默认）：中央资源库由Maven官方维护，中央资源库包括了各种公开的Maven插件、各种第三方项目。几乎所有的开源项目都会选择中央资源库发布框架。</li>
+</ul>
+<p>当Maven需要使用某个插件或JAR包时，Maven的搜索顺序为：本地资源库-&gt;远程资源库-&gt;中央资源库，当Maven从中央资源库下载了某个插件或JAR包时，Maven都会自动在本地资源库中保存它们，因此只有当Maven第一次使用某个插件或JAR包时，才需要通过网络下载。</p>
+<h3 id="6-依赖管理"><a href="#6-依赖管理" class="headerlink" title="6 依赖管理"></a>6 依赖管理</h3><p>下面使用Maven开发一个简单的Struts2项目。</p>
+<p><strong>Step 1</strong>：使用如下命令创建一个Web项目</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mvn archetype:generate -DgroupId&#x3D;org.ohmybug -DartifactId&#x3D;struts2qs -Dpackage&#x3D;org.ohmybug.struts2qs -DarchetypeArtifactId&#x3D;maven-archetype-webapp -DinteractiveMode&#x3D;false</span><br></pre></td></tr></table></figure>
+
+<p>通过上面命令创建的项目具有如下结构：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">struts2qs</span><br><span class="line">└─src</span><br><span class="line">    └─main</span><br><span class="line">        ├─resources</span><br><span class="line">        └─webapp</span><br><span class="line">            └─WEB-INF</span><br><span class="line">                └─web.xml</span><br></pre></td></tr></table></figure>
+
+<p>其中WEB-INF路径和web.xml文件就是Web应用必需的文件夹和配置文件。</p>
+<p>接下来打开struts2qs目录下的pom.xml文件，在该文件中添加如下配置信息。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">name</span>&gt;</span>struts2qs<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">url</span>&gt;</span>http://www.ohmybug.org<span class="tag">&lt;/<span class="name">url</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- 定义该项目所使用的License --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">licenses</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">license</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>Apache 2<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">url</span>&gt;</span>http://www.apache.org/licenses/LICENSE-2.0.txt<span class="tag">&lt;/<span class="name">url</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">distribution</span>&gt;</span>repo<span class="tag">&lt;/<span class="name">distribution</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">comments</span>&gt;</span>A business-friendly OSS license<span class="tag">&lt;/<span class="name">comments</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">license</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">licenses</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- 声明该项目所属的组织 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">organization</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">name</span>&gt;</span>OhMyBug<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">url</span>&gt;</span>http://www.ohmybug.org<span class="tag">&lt;/<span class="name">url</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">organization</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- 声明项目开发者 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">developers</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">developer</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">id</span>&gt;</span>ohmybug<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>ohmybug<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">email</span>&gt;</span>ohmybug@163.com<span class="tag">&lt;/<span class="name">email</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">url</span>&gt;</span>http://www.ohmybug.org<span class="tag">&lt;/<span class="name">url</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">organization</span>&gt;</span>OhMyBug<span class="tag">&lt;/<span class="name">organization</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- 声明开发者的角色 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">roles</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">role</span>&gt;</span>developer<span class="tag">&lt;/<span class="name">role</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">roles</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">timezone</span>&gt;</span>+8<span class="tag">&lt;/<span class="name">timezone</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">developer</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">developers</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- 声明对项目有贡献的人 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">contributors</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">contributor</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>ohmybug<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">email</span>&gt;</span>ohmybug@163.com<span class="tag">&lt;/<span class="name">email</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">url</span>&gt;</span>http://www.ohmybug.org<span class="tag">&lt;/<span class="name">url</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">organization</span>&gt;</span>ohmybug<span class="tag">&lt;/<span class="name">organization</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">roles</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">role</span>&gt;</span>developer<span class="tag">&lt;/<span class="name">role</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">roles</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">contributor</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">contributors</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>上面配置信息用于定制该项目的配置信息，这段配置信息指定了该项目遵守的License，并制定了该项目所属的组织、项目的开发者，以及对项目有贡献的人。这些信息都用于定制该Maven项目，这些信息主要起描述性作用。</p>
+<p>为该项目增加Struts 2的支持，可以在pom.xml中的<code>&lt;dependencies.../&gt;</code>元素内增加<code>&lt;dependency.../&gt;</code>元素——每个<code>&lt;dependency.../&gt;</code>元素定义了一个依赖框架或依赖类库。</p>
+<p><code>&lt;dependency.../&gt;</code>元素可接受如下子元素：</p>
+<ul>
+<li><code>&lt;groupId.../&gt;</code>：指定依赖框架或依赖类库所属组织ID</li>
+<li><code>&lt;artifactId.../&gt;</code>：指定依赖框架或依赖类库的项目名</li>
+<li><code>&lt;version.../&gt;</code>：指定依赖框架或依赖类库的版本号</li>
+<li><code>&lt;scope.../&gt;</code>：指定依赖库起作用的范围。该子元素可接受compile、provided、test、system、runtime、import等值</li>
+<li><code>&lt;type.../&gt;</code>：指定依赖框架或依赖类库的类型，该元素的默认值是jar。另外，还可以只指定war、ejb-client、test-jar等值</li>
+<li><code>&lt;optional.../&gt;</code>：该元素指定该依赖库是否为可选的</li>
+<li><code>&lt;classifier.../&gt;</code>：JDK版本号，如jdk14或hdk15等。用于指定被依赖的JAR包是在哪个版本下编译的。</li>
+<li><code>&lt;exclusions../&gt;</code>：该元素用于排除依赖</li>
+</ul>
+<p><code>&lt;scope.../&gt;</code>元素用于指定依赖库起作用的范围，该元素可指定如下值：</p>
+<ul>
+<li>compile：默认的范围，编译、测试、打包时需要</li>
+<li>provided：表示容器会在runtime时提供</li>
+<li>runtime：表示编译时不需要，但测试和运行时需要，最终打包会包含进去</li>
+<li>test：只用于测试阶段</li>
+<li>system：与provided类似，但要求该JAR是系统中自带的</li>
+<li>import：继承父POM文件中用dependencyManagement配置的依赖，import范围只能在dependencyManagement元素中使用（为了解决多继承）</li>
+</ul>
+<p>关于Maven的依赖配置需要说明的是，Maven依赖管理具有传递性，比如配置文件设置了项目依赖于a.jar，而a.jar又依赖于b.jar，那么该项目无需显示声明依赖于b.jar，Maven会自动管理这种依赖的传递</p>
+<p>由于Maven的依赖管理具有传递性，因此有时需要用<code>&lt;exclusion.../&gt;</code>子元素排除指定的依赖，例如如下配置：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>javax.activation<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>mail<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">type</span>&gt;</span>jar<span class="tag">&lt;/<span class="name">type</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">exclusions</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">exclusion</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>activation<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>javax.activation<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">exclusion</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">exclusions</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>上面配置指定该项目依赖于mail.jar，由于Maven的依赖具有传递性，因此Maven会自动将mail.jar以来的activation.jar也依赖进来。为了将activation.jar排除出去，即可进行如上面配置文件所示的配置。</p>
+<p>掌握依赖关系的配置方法之后，接下来可以在strut2qs项目的pom.xml文件的<code>&lt;dependencies.../&gt;</code>元素中增加如下配置：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 配置该项目依赖Struts 2 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.struts<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>struts2-core<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">  <span class="comment">&lt;!-- 此处指定依赖的Struts 2版本 --&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.5.13<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>junit<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>junit<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.8.1<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">scope</span>&gt;</span>test<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>每个框架的坐标除了可以通过该框架自身的文档获取之外，也可以登录<code>http://search.maven.org</code>站点查询</p>
+<p>进入struts2qs项目的pom.xml文件所在的路径，执行如下命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mvn package</span><br></pre></td></tr></table></figure>
+
+<p>由于此时Maven项目中的文件组织形式符合Web应用的格式，而且pom.xml文件中&lt;packaging…/&gt;元素的值为war，因此执行上面命令将会把该项目打包成WAR包。</p>
+<p>执行上面命令同样也会从网络上下载插件和文件，当该命令执行成功后即可在target目录下看到一个struts2qs.war文件，如果用WinRAR工具解压该文件，即可看到该压缩包内<code>WEB-INF\lib</code>中包含了Struts 2框架的各种JAR包，如图。</p>
+<div style="width:70%;margin:auto">
+<img src="/2020/04/27/Maven%E7%9A%84%E5%AE%89%E8%A3%85%E5%92%8C%E4%BD%BF%E7%94%A8/7.jpg" class="" title="Maven自动下载的Struts 2">
+</div>
+
+<p>从图中可以看出使用Maven之后，只需要在pom.xml文件中配置该项目依赖Struts 2，剩下的事情就交给Maven搞定，无需关心Struts 2的官网，无需关心从哪里下载Struts 2的JAR包，所有依赖关系都交给Maven处理即可。</p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2020/04/27/Maven%E7%9A%84%E5%AE%89%E8%A3%85%E5%92%8C%E4%BD%BF%E7%94%A8/">Maven的安装和使用</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">Oh_MyBug</a></p>
+        <p><span>发布时间:</span>2020-04-27, 23:07:45</p>
+        <p><span>最后更新:</span>2020-04-27, 23:07:45</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2020/04/27/Maven%E7%9A%84%E5%AE%89%E8%A3%85%E5%92%8C%E4%BD%BF%E7%94%A8/" title="Maven的安装和使用">https://oh-mybug.github.io/2020/04/27/Maven%E7%9A%84%E5%AE%89%E8%A3%85%E5%92%8C%E4%BD%BF%E7%94%A8/</a>
+            <span class="copy-path" data-clipboard-text="原文: https://oh-mybug.github.io/2020/04/27/Maven%E7%9A%84%E5%AE%89%E8%A3%85%E5%92%8C%E4%BD%BF%E7%94%A8/　　作者: Oh_MyBug" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license noopener" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2020/05/16/%E6%B7%B1%E5%85%A5Web%E8%AF%B7%E6%B1%82%E8%BF%87%E7%A8%8B/">
+                    深入Web请求过程
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2020/04/25/Ant%E7%9A%84%E5%AE%89%E8%A3%85%E5%92%8C%E4%BD%BF%E7%94%A8/">
+                    Ant的安装和使用
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-前言"><span class="toc-text">1 前言</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-下载和安装Maven"><span class="toc-text">2 下载和安装Maven</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-设置Maven"><span class="toc-text">3 设置Maven</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-创建、构建简单的项目"><span class="toc-text">4 创建、构建简单的项目</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-Maven的核心概念"><span class="toc-text">5 Maven的核心概念</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#5-1-Maven的生命周期（lifecycle）"><span class="toc-text">5.1 Maven的生命周期（lifecycle）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-2-插件和目标-plugins-and-goal"><span class="toc-text">5.2 插件和目标(plugins and goal)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-3-Maven的坐标-coordinate"><span class="toc-text">5.3 Maven的坐标(coordinate)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-4-Maven的资源库-reposity"><span class="toc-text">5.4 Maven的资源库(reposity)</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-依赖管理"><span class="toc-text">6 依赖管理</span></a></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-4 i,
+        .toc-level-4 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+    </script>
+
+
+
+    
+<div class="share">
+    
+        <div class="bdsharebuttonbox">
+            <a href="#" class="fa fa-twitter bds_twi" data-cmd="twi" title="分享到推特"></a>
+            <a href="#" class="fa fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+            <a href="#" class="fa fa-qq bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+            <a href="#" class="fa fa-files-o bds_copy" data-cmd="copy" title="复制网址"></a>
+            <a href="#" class="fa fa fa-envelope-o bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+            <a href="#" class="fa fa-weixin bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+            <a href="#" class="fa fa-share-alt bds_more" data-cmd="more"></i></a>
+        </div>
+        <script>
+            window._bd_share_config={
+                "common":{"bdSnsKey":{},"bdText":"Maven的安装和使用　| Oh_MyBug　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+        </script>
+    
+
+    
+</div>
+
+
+
+
+
+
+
+    
+        <section id="comments" style="margin: 2em; padding: 2em; background: rgba(255, 255, 255, 0.5)">
+    <div id="vcomment" class="comment"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//unpkg.com/valine@1.2.0-beta1/dist/Valine.min.js"></script>
+    <script>
+      new Valine({
+        el: '#vcomment',
+        notify: 'true',
+        verify: 'true',
+        app_id: "syE2SupQmwVgiUj9A3PkVhMU-gzGzoHsz",
+        app_key: "dcslOw47bfKK9PtzeIqLjV6e",
+        placeholder: "Just go go!",
+        avatar: "mp"
+      });
+    </script>
+</section>
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2020/05/16/%E6%B7%B1%E5%85%A5Web%E8%AF%B7%E6%B1%82%E8%BF%87%E7%A8%8B/" title="上一篇: 深入Web请求过程">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2020/04/25/Ant%E7%9A%84%E5%AE%89%E8%A3%85%E5%92%8C%E4%BD%BF%E7%94%A8/" title="下一篇: Ant的安装和使用">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2020/07/11/Morris%E4%BA%8C%E5%8F%89%E6%A0%91%E9%81%8D%E5%8E%86%E7%AE%97%E6%B3%95/">Morris二叉树遍历算法</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/07/09/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B9%8B%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/">设计模式之单例模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/05/16/%E6%B7%B1%E5%85%A5Web%E8%AF%B7%E6%B1%82%E8%BF%87%E7%A8%8B/">深入Web请求过程</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/27/Maven%E7%9A%84%E5%AE%89%E8%A3%85%E5%92%8C%E4%BD%BF%E7%94%A8/">Maven的安装和使用</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/25/Ant%E7%9A%84%E5%AE%89%E8%A3%85%E5%92%8C%E4%BD%BF%E7%94%A8/">Ant的安装和使用</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/23/Eclipse%E7%9A%84%E5%AE%89%E8%A3%85%E4%B8%8E%E4%BD%BF%E7%94%A8/">Eclipse的安装与使用</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/23/IDEA%E4%B8%BB%E9%A2%98%E4%B8%8E%E6%8F%92%E4%BB%B6/">如何让IntelliJ IDEA变得高效且舒适?</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/22/%E8%BD%BB%E9%87%8F%E7%BA%A7JavaEE%E4%BC%81%E4%B8%9A%E5%BA%94%E7%94%A8/">Tomcat的下载和安装</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/16/Anaconda%E5%AE%89%E8%A3%85%E4%B8%8E%E8%99%9A%E6%8B%9F%E7%8E%AF%E5%A2%83%E5%88%9B%E5%BB%BA/">Anaconda安装与虚拟环境创建</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/15/%E8%A7%A3%E5%86%B3GitHub%E7%BD%91%E9%A1%B5%E4%B8%8A%E5%9B%BE%E7%89%87%E6%98%BE%E7%A4%BA%E5%A4%B1%E8%B4%A5%E9%97%AE%E9%A2%98/">解决GitHub网页上图片显示失败问题</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/14/%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86-%E6%9B%B4%E6%96%B0%E4%B8%AD/">进程管理[更新中...]</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/11/Hexo%E4%B8%BB%E9%A2%98%E2%80%94%E2%80%94Yelee%E7%9A%84%E4%BD%BF%E7%94%A8-%E6%9B%B4%E6%96%B0%E4%B8%AD/">Hexo主题——Yelee的使用[更新中...]</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/09/Hexo%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/">Hexo个人博客搭建</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2020 Oh_MyBug
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 5;
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+
+    <script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script src="//cdn.bootcss.com/mathjax/2.6.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+            
+            
+            
+            
+            
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+<script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>
